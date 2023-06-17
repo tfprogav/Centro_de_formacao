@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
-#from menu_animation import *
+
 
 menu_x = 0
 
