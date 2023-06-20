@@ -1,6 +1,5 @@
 import mysql.connector
 
-# Connect to the MySQL database
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -9,12 +8,19 @@ mydb = mysql.connector.connect(
 )
 
 
-mycursor = mydb.cursor()
 
-mycursor.execute("SHOW TABLES")
+def alunos():
+    alunos = []
+    mycursor = mydb.cursor()
 
-tables = mycursor.fetchall()
+    mycursor.execute("SELECT aluno_nome FROM q_alunos")
 
-# Print the table names
-for table in tables:
-    print(table[0])
+    q_alunos = mycursor.fetchall()
+
+    for rows in q_alunos:
+        aluno = rows[0]
+        alunos.append(aluno)
+    return alunos
+
+
+

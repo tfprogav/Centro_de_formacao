@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk #install pillow
-
+import database
+import mysql.connector
 
 menu_x = 0
 
@@ -37,44 +38,84 @@ def gestao_alunos():
         hamburguer_button.configure(image=hamburguer_tk)
 
 
+    def person_info():
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="tf_prog_av"
+        )
+        mycursor = mydb.cursor()
+
+        mycursor.execute("SELECT * FROM q_alunos")
+
+        q_alunos = mycursor.fetchall()
+        nome_selecionado = change_person.get()
+        for rows in q_alunos:
+            if rows[1] == nome_selecionado:
+                aluno_nome_aux = rows[1]
+                aluno_phone_aux = rows[2]
+                aluno_email_aux = rows[3]
+                aluno_nome.set(f'Nome: {aluno_nome_aux}')
+                aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
+                aluno_email.set(f'Email: {aluno_email_aux}')
 
     main_frame = Frame(root, width=800, height=800)
     main_frame.pack(expand=True, fill='both')
 
-
-    LEFTFRAME = Frame(main_frame)                  #left frame
+    LEFTFRAME = Frame(main_frame) #--------------------------------left frame------------------------------
     LEFTFRAME.pack(side='left', padx=50, fill='both')
 
-
-
-    image_person = Frame(LEFTFRAME)
-    image_person.pack(pady=20, side='left', fill='both')
+    image_person_frame = Frame(LEFTFRAME) #--------------------------------left frame image section--------
+    image_person_frame.pack(pady=20, side='left', fill='both')
 
     icon_person_original = Image.open('person_icon.png').resize((200, 200))
     icon_person_tk = ImageTk.PhotoImage(icon_person_original)
 
-    icon_person = Label(image_person, image=icon_person_tk)
-    icon_person.pack(padx=10)
+    icon_person = Label(image_person_frame, image=icon_person_tk)
+    icon_person.pack(padx=10, pady=5)
+
+
+    alunos = database.alunos()
+
+    change_person = ttk.Combobox(image_person_frame, values=alunos, font='Roboto 14', justify='center')
+    change_person.pack(pady=5)
+
+    select_button = ttk.Button(image_person_frame, text='Selecionar aluno acima', command=person_info, width=40)
+    select_button.pack(pady=5)
 
 
 
 
-    info_person = Frame(LEFTFRAME)
+
+
+    info_person = Frame(LEFTFRAME)#--------------------------------left frame info section--------
     info_person.pack(pady=20, side='left', fill='both')
 
     white_space = Label(info_person)
     white_space.pack(pady=5)
 
-    info_person_name = Label(info_person, text='Nome: André', font='Roboto 18')
-    info_person_name.pack(padx=30, pady=15)
+    aluno_nome = StringVar()
+    aluno_phone = StringVar()
+    aluno_email = StringVar()
 
-    info_person_email = Label(info_person, text='Email: andremontoito@gmail.com', font='Roboto 18')
-    info_person_email.pack(padx=30, pady=15)
+    aluno_nome.set('Nome: ')
+    aluno_phone.set('Telemóvel: ')
+    aluno_email.set('Email: ')
+
+    info_person_name = Label(info_person, textvariable=aluno_nome, font='Roboto 16')
+    info_person_name.pack(padx=30, pady=15, anchor='w')
+
+    info_person_email = Label(info_person, textvariable=aluno_email, font='Roboto 16')
+    info_person_email.pack(padx=30, pady=15, anchor='w')
+
+    info_person_phone = Label(info_person, textvariable=aluno_phone, font='Roboto 16')
+    info_person_phone.pack(padx=30, pady=15, anchor='w')
 
 
 
 
-    RIGHTFRAME = Frame(main_frame)                  #rigth frame
+    RIGHTFRAME = Frame(main_frame)#--------------------------------rigth frame------------------------------
     RIGHTFRAME.pack(side='left', padx=50, fill='both')
 
 
