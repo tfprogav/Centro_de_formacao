@@ -116,10 +116,22 @@ def gestao_alunos():
 
 
     RIGHTFRAME = Frame(main_frame)#--------------------------------rigth frame------------------------------
-    RIGHTFRAME.pack(side='left', padx=50, fill='both')
+    RIGHTFRAME.pack(side='left', padx=50, fill='both', anchor='e', expand=True)
 
+    menu_alunos = Frame(RIGHTFRAME)
+    menu_alunos.pack(anchor='ne', expand=True, pady=50)
 
+    perfil_info_button = Button(menu_alunos, text='Informação Pessoal', takefocus=False, cursor='hand2', width=30, borderwidth=0, font='Roboto 14', anchor='e')
+    perfil_info_button.pack(anchor='e')
 
+    create_aluno_button = Button(menu_alunos, text='Criar Perfil de Aluno', takefocus=False, cursor='hand2', width=30, borderwidth=0, font='Roboto 14', anchor='e')
+    create_aluno_button.pack(anchor='e')
+
+    join_curso = Button(menu_alunos, text='Adicionar Aluno a um curso', takefocus=False, cursor='hand2', width=30, borderwidth=0, font='Roboto 14', anchor='e')
+    join_curso.pack(anchor='e')
+
+    remove_aluno = Button(menu_alunos, text='Eliminar Aluno', takefocus=False, cursor='hand2', width=30, borderwidth=0, font='Roboto 14', anchor='e')
+    remove_aluno.pack(anchor='e')
 
 
 
