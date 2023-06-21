@@ -3,10 +3,17 @@ from tkinter import ttk
 from PIL import Image, ImageTk #install pillow
 import database
 import mysql.connector
+from tkinter import messagebox
 
 menu_x = 0
 
 def gestao_alunos():
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="tf_prog_av"
+    )
 
     root = Tk()
     root.title('Centro de formação')
@@ -39,12 +46,6 @@ def gestao_alunos():
 
 
     def person_info():
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="tf_prog_av"
-        )
         mycursor = mydb.cursor()
 
         mycursor.execute("SELECT * FROM q_alunos")
@@ -60,14 +61,27 @@ def gestao_alunos():
                 aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
                 aluno_email.set(f'Email: {aluno_email_aux}')
 
+    def delete_aluno():
+        mycursor = mydb.cursor()
+        aluno = change_person.get()
+        if aluno:
+            response = messagebox.askyesno('Tem a certeza?', 'Tem a certeza que quer eliminar este aluno?')
+            if response:
+                mycursor.execute(f"DELETE FROM q_alunos WHERE aluno_nome = '{aluno}'")
+                mydb.commit()
+                messagebox.showinfo('Sucesso', 'O seu aluno foi eliminado')
+            else:
+                pass
+        else:
+            messagebox.showerror('Erro', 'Selecione um aluno antes de eliminá-lo')
     main_frame = Frame(root, width=800, height=800)
     main_frame.pack(expand=True, fill='both')
 
-    LEFTFRAME = Frame(main_frame) #--------------------------------left frame------------------------------
-    LEFTFRAME.pack(side='left', padx=50, fill='both')
+    LEFTFRAME = Frame(main_frame) #--------------------------------left frame---------------------------------
+    LEFTFRAME.pack(side='left', padx=50, fill='both', expand=True)
 
-    image_person_frame = Frame(LEFTFRAME) #--------------------------------left frame image section--------
-    image_person_frame.pack(pady=20, side='left', fill='both')
+    image_person_frame = Frame(LEFTFRAME) #--------------------------------left frame(left side) image section----------
+    image_person_frame.pack(pady=20, side='left', anchor='n')
 
     icon_person_original = Image.open('person_icon.png').resize((200, 200))
     icon_person_tk = ImageTk.PhotoImage(icon_person_original)
@@ -89,8 +103,8 @@ def gestao_alunos():
 
 
 
-    info_person = Frame(LEFTFRAME)#--------------------------------left frame info section--------
-    info_person.pack(pady=20, side='left', fill='both')
+    info_person = Frame(LEFTFRAME)#--------------------------------left frame(right side) info section------------------
+    info_person.pack(pady=20, side='left', anchor='n')
 
     white_space = Label(info_person)
     white_space.pack(pady=5)
@@ -114,24 +128,32 @@ def gestao_alunos():
 
 
 
+    delete_person = Button(image_person_frame, text='Eliminar Aluno', takefocus=False, cursor='hand2', font='Roboto 12',
+                           bg='#87232d', fg='white', command=delete_aluno)
+    delete_person.pack(pady=10)
 
-    RIGHTFRAME = Frame(main_frame)#--------------------------------rigth frame------------------------------
+
+
+    RIGHTFRAME = Frame(main_frame)#--------------------------------rigth frame------------------------------------------
     RIGHTFRAME.pack(side='left', padx=50, fill='both', anchor='e', expand=True)
+
+
 
     menu_alunos = Frame(RIGHTFRAME)
     menu_alunos.pack(anchor='ne', expand=True, pady=50)
 
-    perfil_info_button = Button(menu_alunos, text='Informação Pessoal', takefocus=False, cursor='hand2', width=30, borderwidth=0, font='Roboto 14', anchor='e')
+    perfil_info_button = Button(menu_alunos, text='Informação Pessoal', takefocus=False, cursor='hand2', width=30,
+                                borderwidth=0, font='Roboto 14', anchor='e')
     perfil_info_button.pack(anchor='e')
 
-    create_aluno_button = Button(menu_alunos, text='Criar Perfil de Aluno', takefocus=False, cursor='hand2', width=30, borderwidth=0, font='Roboto 14', anchor='e')
+    create_aluno_button = Button(menu_alunos, text='Criar Perfil de Aluno', takefocus=False, cursor='hand2', width=30,
+                                 borderwidth=0, font='Roboto 14', anchor='e')
     create_aluno_button.pack(anchor='e')
 
-    join_curso = Button(menu_alunos, text='Adicionar Aluno a um curso', takefocus=False, cursor='hand2', width=30, borderwidth=0, font='Roboto 14', anchor='e')
+    join_curso = Button(menu_alunos, text='Adicionar Aluno a um curso', takefocus=False, cursor='hand2', width=30,
+                        borderwidth=0, font='Roboto 14', anchor='e')
     join_curso.pack(anchor='e')
 
-    remove_aluno = Button(menu_alunos, text='Eliminar Aluno', takefocus=False, cursor='hand2', width=30, borderwidth=0, font='Roboto 14', anchor='e')
-    remove_aluno.pack(anchor='e')
 
 
 
