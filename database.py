@@ -17,10 +17,27 @@ def alunos():
 
     q_alunos = mycursor.fetchall()
 
-    for rows in q_alunos:
-        aluno = rows[0]
+    for row in q_alunos:
+        aluno = row[0]
         alunos.append(aluno)
     return alunos
+
+def alunos_id():
+    alunos_info = {}
+    mycursor = mydb.cursor()
+
+    mycursor.execute("SELECT  aluno_id, aluno_nome FROM q_alunos")
+
+    q_alunos = mycursor.fetchall()
+
+    for row in q_alunos:
+        aluno_id = row[0]
+        aluno_nome = row[1]
+        alunos_info[aluno_id] = aluno_nome
+    return alunos_info
+
+
+
 
 
 

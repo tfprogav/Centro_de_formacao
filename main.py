@@ -46,6 +46,7 @@ def gestao_alunos():
 
 
     def person_info():
+        person_curso()
         mycursor = mydb.cursor()
 
         mycursor.execute("SELECT * FROM q_alunos")
@@ -60,6 +61,32 @@ def gestao_alunos():
                 aluno_nome.set(f'Nome: {aluno_nome_aux}')
                 aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
                 aluno_email.set(f'Email: {aluno_email_aux}')
+
+
+    def person_curso():
+        info_person_courses.delete(0, last=6)
+
+        nome_selecionado = change_person.get()
+        mycursor = mydb.cursor()
+        alunos_dict = database.alunos_id()
+
+        for key, value in alunos_dict.items():
+            if value == nome_selecionado:
+                id = key
+        mycursor.execute(
+            f"SELECT q_alunos.aluno_id, q_cursos.curso_desc FROM q_alunos JOIN q_alunos_cursos ON q_alunos.aluno_id = q_alunos_cursos.aluno_id JOIN q_cursos ON q_alunos_cursos.curso_id = q_cursos.curso_id WHERE q_alunos.aluno_id = {id};")
+
+        cursos_alunos = mycursor.fetchall()
+
+        alunos_cursos_lista = []
+        for row in cursos_alunos:
+            curso_desc = row[1]
+            alunos_cursos_lista.append(curso_desc)
+
+        for value in alunos_cursos_lista:
+            info_person_courses.insert(END, value)
+        return alunos_cursos_lista
+
 
     def delete_aluno():
         mycursor = mydb.cursor()
@@ -98,7 +125,9 @@ def gestao_alunos():
     select_button = ttk.Button(image_person_frame, text='Selecionar aluno acima', command=person_info, width=40)
     select_button.pack(pady=5)
 
-
+    delete_person = Button(image_person_frame, text='Eliminar Aluno', takefocus=False, cursor='hand2', font='Roboto 12',
+                           bg='#87232d', fg='white', command=delete_aluno)
+    delete_person.pack(pady=10)
 
 
 
@@ -113,6 +142,7 @@ def gestao_alunos():
     aluno_phone = StringVar()
     aluno_email = StringVar()
 
+
     aluno_nome.set('Nome: ')
     aluno_phone.set('Telemóvel: ')
     aluno_email.set('Email: ')
@@ -126,11 +156,20 @@ def gestao_alunos():
     info_person_phone = Label(info_person, textvariable=aluno_phone, font='Roboto 16')
     info_person_phone.pack(padx=30, pady=15, anchor='w')
 
+    white_space = Label(info_person)
+    white_space.pack(pady=50)
 
 
-    delete_person = Button(image_person_frame, text='Eliminar Aluno', takefocus=False, cursor='hand2', font='Roboto 12',
-                           bg='#87232d', fg='white', command=delete_aluno)
-    delete_person.pack(pady=10)
+
+
+    cursos_text = Label(info_person, text='Cursos Inscritos:', font='Roboto 16')
+    cursos_text.pack(padx=30, pady=15, anchor='w')
+
+
+
+    info_person_courses = Listbox(info_person, font='Roboto 14', width=30, borderwidth=0)
+    info_person_courses.pack(padx=30, pady=15, anchor='w')
+
 
 
 
