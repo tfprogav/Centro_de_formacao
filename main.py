@@ -49,7 +49,7 @@ def gestao_alunos():
         person_curso()
         mycursor = mydb.cursor()
 
-        mycursor.execute("SELECT * FROM q_alunos")
+        mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
 
         q_alunos = mycursor.fetchall()
         nome_selecionado = change_person.get()
@@ -74,7 +74,7 @@ def gestao_alunos():
             if value == nome_selecionado:
                 id = key
         mycursor.execute(
-            f"SELECT q_alunos.aluno_id, q_cursos.curso_desc FROM q_alunos JOIN q_alunos_cursos ON q_alunos.aluno_id = q_alunos_cursos.aluno_id JOIN q_cursos ON q_alunos_cursos.curso_id = q_cursos.curso_id WHERE q_alunos.aluno_id = {id};")
+            f"SELECT q_utilizadores.utilizador_id, q_cursos.curso_desc FROM q_utilizadores JOIN q_alunos_cursos ON q_utilizadores.utilizador_id = q_alunos_cursos.aluno_id JOIN q_cursos ON q_alunos_cursos.curso_id = q_cursos.curso_id WHERE q_utilizadores.utilizador_id = {id};")
 
         cursos_alunos = mycursor.fetchall()
 
@@ -94,7 +94,7 @@ def gestao_alunos():
         if aluno:
             response = messagebox.askyesno('Tem a certeza?', 'Tem a certeza que quer eliminar este aluno?')
             if response:
-                mycursor.execute(f"DELETE FROM q_alunos WHERE aluno_nome = '{aluno}'")
+                mycursor.execute(f"DELETE FROM q_utilizadores WHERE utilizador_nome = '{aluno}'")
                 mydb.commit()
                 messagebox.showinfo('Sucesso', 'O seu aluno foi eliminado')
             else:

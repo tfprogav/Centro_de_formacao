@@ -13,11 +13,11 @@ def alunos():
     alunos = []
     mycursor = mydb.cursor()
 
-    mycursor.execute("SELECT aluno_nome FROM q_alunos")
+    mycursor.execute("SELECT utilizador_nome FROM q_utilizadores WHERE utilizador_perfil = 1")
 
-    q_alunos = mycursor.fetchall()
+    q_utilizadores = mycursor.fetchall()
 
-    for row in q_alunos:
+    for row in q_utilizadores:
         aluno = row[0]
         alunos.append(aluno)
     return alunos
@@ -26,14 +26,14 @@ def alunos_id():
     alunos_info = {}
     mycursor = mydb.cursor()
 
-    mycursor.execute("SELECT  aluno_id, aluno_nome FROM q_alunos")
+    mycursor.execute("SELECT  utilizador_id, utilizador_nome FROM q_utilizadores WHERE utilizador_perfil = 1")
 
-    q_alunos = mycursor.fetchall()
+    q_utilizadores = mycursor.fetchall()
 
-    for row in q_alunos:
-        aluno_id = row[0]
-        aluno_nome = row[1]
-        alunos_info[aluno_id] = aluno_nome
+    for row in q_utilizadores:
+        utilizador_id = row[0]
+        utilizador_nome = row[1]
+        alunos_info[utilizador_id] = utilizador_nome
     return alunos_info
 
 
