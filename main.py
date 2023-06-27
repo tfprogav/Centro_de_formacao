@@ -143,7 +143,7 @@ def gestao_alunos():
 
     alunos = database.alunos()
 
-    change_person = ttk.Combobox(image_person_frame, values=alunos, font='RArial 14', justify='center')
+    change_person = ttk.Combobox(image_person_frame, values=alunos, font='RArial 14', justify='center', state='readonly')
     change_person.pack(pady=5)
 
     select_button = ttk.Button(image_person_frame, text='Selecionar aluno acima', command=person_info, width=40)
@@ -198,7 +198,7 @@ def gestao_alunos():
 
 
     RIGHTFRAME = Frame(main_frame)#--------------------------------rigth frame------------------------------------------
-    RIGHTFRAME.pack(side='left', padx=50, fill='both', anchor='e', expand=True)
+    RIGHTFRAME.pack(side='left', fill='both', anchor='e', expand=True)
 
 
 
@@ -240,66 +240,47 @@ def add_course(): #-----------------------------add course----------------------
     button5 = Button(menu_frame, text='Performance de Alunos', **button_styles)
     button5.pack(pady=10, padx=20, fill='x')
 
+
+
     LEFTFRAME = Frame(main_frame)  # --------------------------------left frame---------------------------------
-    LEFTFRAME.pack(side='left', padx=50, fill='both', expand=True)
+    LEFTFRAME.pack(side='left', fill='both', expand=True)
 
-    image_person_frame = Frame(LEFTFRAME)  # --------------------------------left frame(left side) image section----------
-    image_person_frame.pack(pady=20, side='left', anchor='n')
-
-    icon_person_original = Image.open('person_icon.png').resize((200, 200))
-    icon_person_tk = ImageTk.PhotoImage(icon_person_original)
-
-    icon_person = Label(image_person_frame, image=icon_person_tk)
-    icon_person.pack(padx=10, pady=5)
+    white_space = Label(LEFTFRAME)
+    white_space.pack(pady=15)
 
     alunos = database.alunos()
 
-    change_person = ttk.Combobox(image_person_frame, values=alunos, font='RArial 14', justify='center')
+
+    person_title = Label(LEFTFRAME, text= 'Selecione o Aluno:', font='Arial 17')
+    person_title.pack()
+
+    change_person = ttk.Combobox(LEFTFRAME, values=alunos, font='Arial 14', justify='center', state='readonly')
     change_person.pack(pady=5)
 
-    select_button = ttk.Button(image_person_frame, text='Selecionar aluno acima', width=40)
-    select_button.pack(pady=5)
-
-    delete_person = Button(image_person_frame, text='Eliminar Aluno', takefocus=False, cursor='hand2', font='Arial 12',
-                           bg='#87232d', fg='white')
-    delete_person.pack(pady=10)
-
-    info_person = Frame(LEFTFRAME)  # --------------------------------left frame(right side) info section------------------
-    info_person.pack(pady=20, side='left', anchor='n')
-
-    white_space = Label(info_person)
-    white_space.pack(pady=5)
-
-    aluno_nome = StringVar()
-    aluno_phone = StringVar()
-    aluno_email = StringVar()
-
-    aluno_nome.set('Nome: ')
-    aluno_phone.set('Telemóvel: ')
-    aluno_email.set('Email: ')
-
-    info_person_name = Label(info_person, textvariable=aluno_nome, font='Arial 16')
-    info_person_name.pack(padx=30, pady=15, anchor='w')
-
-    info_person_email = Label(info_person, textvariable=aluno_email, font='Arial 16')
-    info_person_email.pack(padx=30, pady=15, anchor='w')
-
-    info_person_phone = Label(info_person, textvariable=aluno_phone, font='Arial 16')
-    info_person_phone.pack(padx=30, pady=15, anchor='w')
-
-    white_space = Label(info_person)
-    white_space.pack(pady=50)
-
-    cursos_text = Label(info_person, text='Cursos Inscritos:', font='Arial 16')
-    cursos_text.pack(padx=30, pady=15, anchor='w')
-
-    info_person_courses = Listbox(info_person, font='Arial 14', width=30, borderwidth=0)
-    info_person_courses.pack(padx=30, pady=15, anchor='w')
 
     RIGHTFRAME = Frame(main_frame)  # --------------------------------rigth frame------------------------------------------
-    RIGHTFRAME.pack(side='left', padx=50, fill='both', anchor='e', expand=True)
+    RIGHTFRAME.pack(side='left', fill='both', expand=True)
 
-    menu_alunos = Frame(RIGHTFRAME, bg='#b3b5b4', width=150, height=50)
+    white_space = Label(RIGHTFRAME)
+    white_space.pack(pady=15)
+
+    cursos = database.cursos()
+
+    cursos_text = Label(RIGHTFRAME, text='Selecione o Curso:', font='Arial 17')
+    cursos_text.pack()
+
+    change_person = ttk.Combobox(RIGHTFRAME, values=cursos, font='Arial 14', justify='center', state='readonly')
+    change_person.pack(pady=5)
+
+
+
+
+
+
+    RIGHTMENU_FRAME = Frame(main_frame)
+    RIGHTMENU_FRAME.pack(side='left', fill='both', expand=True)
+
+    menu_alunos = Frame(RIGHTMENU_FRAME, bg='#b3b5b4', width=150, height=50)
     menu_alunos.pack(anchor='ne', expand=True)
 
     button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu, command=gestao_alunos)

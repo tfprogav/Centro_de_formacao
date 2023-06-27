@@ -39,6 +39,16 @@ def alunos_id():
 
 
 
+def cursos():
+    cursos = []
+    mycursor = mydb.cursor()
 
+    mycursor.execute("SELECT curso_desc, curso_horas, CONCAT(curso_desc, ' - ', curso_horas, ' horas') FROM q_cursos")
+
+    q_cursos = mycursor.fetchall()
+    for row in q_cursos:
+        curso = row[2]
+        cursos.append(curso)
+    return cursos
 
 
