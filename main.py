@@ -154,8 +154,6 @@ def gestao_alunos():
     delete_person.pack(pady=10)
 
 
-
-
     info_person = Frame(LEFTFRAME)#--------------------------------left frame(right side) info section------------------
     info_person.pack(pady=20, side='left', anchor='n')
 
@@ -209,8 +207,11 @@ def gestao_alunos():
     button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu)
     button1.pack(pady=10, padx=10, fill='x')
 
-    button2 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu, command=add_course)
+    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu)
     button2.pack(pady=10, padx=10, fill='x')
+
+    button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu, command=add_course)
+    button3.pack(pady=10, padx=10, fill='x')
 
     title_page = Label(main_frame, text='Informação Pessoal', font='Arial 16 bold')
     title_page.place(x=540, y=5)
@@ -241,44 +242,42 @@ def add_course(): #-----------------------------add course----------------------
     button5.pack(pady=10, padx=20, fill='x')
 
 
+    center_frame = Frame(main_frame)  # --------------------------------left frame---------------------------------
+    center_frame.pack(side='left', fill='both', expand=True)
 
-    LEFTFRAME = Frame(main_frame)  # --------------------------------left frame---------------------------------
-    LEFTFRAME.pack(side='left', fill='both', expand=True)
 
-    white_space = Label(LEFTFRAME)
-    white_space.pack(pady=15)
+
+    white_space = Label(center_frame)
+    white_space.pack(pady=45)
 
     alunos = database.alunos()
 
 
-    person_title = Label(LEFTFRAME, text= 'Selecione o Aluno:', font='Arial 17')
+    person_title = Label(center_frame, text= 'Selecione o Aluno:', font='Arial 17')
     person_title.pack()
 
-    change_person = ttk.Combobox(LEFTFRAME, values=alunos, font='Arial 14', justify='center', state='readonly')
-    change_person.pack(pady=5)
-
-
-    RIGHTFRAME = Frame(main_frame)  # --------------------------------rigth frame------------------------------------------
-    RIGHTFRAME.pack(side='left', fill='both', expand=True)
-
-    white_space = Label(RIGHTFRAME)
-    white_space.pack(pady=15)
+    change_person = ttk.Combobox(center_frame, values=alunos, font='Arial 14', justify='center', state='readonly')
+    change_person.pack(pady=25)
 
     cursos = database.cursos()
 
-    cursos_text = Label(RIGHTFRAME, text='Selecione o Curso:', font='Arial 17')
+    cursos_text = Label(center_frame, text='Selecione o Curso:', font='Arial 17')
     cursos_text.pack()
 
-    change_person = ttk.Combobox(RIGHTFRAME, values=cursos, font='Arial 14', justify='center', state='readonly')
-    change_person.pack(pady=5)
+    change_person = ttk.Combobox(center_frame, values=cursos, font='Arial 14', justify='center', state='readonly', width=30)
+    change_person.pack(pady=25)
 
+    pagamento_text = Label(center_frame, text='Selecione o Método de pagamento:', font='Arial 17')
+    pagamento_text.pack()
 
+    change_pagamento = ttk.Combobox(center_frame, values=['Credit Card', 'PayPal', 'Bank Transfer', 'Cash'], font='Arial 14', justify='center', state='readonly', width=20)
+    change_pagamento.pack(pady=25)
 
-
-
+    change_pagamento = Button(center_frame, text='Adicionar Aluno ao Curso', fg='white', bg='green', font='Arial 16', cursor='hand2')
+    change_pagamento.pack(pady=25)
 
     RIGHTMENU_FRAME = Frame(main_frame)
-    RIGHTMENU_FRAME.pack(side='left', fill='both', expand=True)
+    RIGHTMENU_FRAME.pack(side='left', fill='both')
 
     menu_alunos = Frame(RIGHTMENU_FRAME, bg='#b3b5b4', width=150, height=50)
     menu_alunos.pack(anchor='ne', expand=True)
@@ -286,8 +285,11 @@ def add_course(): #-----------------------------add course----------------------
     button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu, command=gestao_alunos)
     button1.pack(pady=10, padx=10, fill='x')
 
-    button2 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu)
+    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu)
     button2.pack(pady=10, padx=10, fill='x')
+
+    button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu)
+    button3.pack(pady=10, padx=10, fill='x')
 
     title_page = Label(main_frame, text='Adicionar Aluno a Curso', font='Arial 16 bold')
     title_page.place(x=540, y=5)
