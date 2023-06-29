@@ -4,6 +4,7 @@ from PIL import Image, ImageTk #install pillow
 import database
 import mysql.connector
 from tkinter import messagebox
+from tkinter import simpledialog
 
 
 mydb = mysql.connector.connect(
@@ -50,6 +51,7 @@ main_frame.pack(expand=True, fill='both')
 
 def gestao_alunos():
     clear_content_frame(main_frame)
+    alunos = database.alunos()
     def person_info():
         person_curso()
         mycursor = mydb.cursor()
@@ -141,7 +143,7 @@ def gestao_alunos():
     icon_person.pack(padx=10, pady=5)
 
 
-    alunos = database.alunos()
+
 
     change_person = ttk.Combobox(image_person_frame, values=alunos, font='RArial 14', justify='center', state='readonly')
     change_person.pack(pady=5)
@@ -207,7 +209,7 @@ def gestao_alunos():
     button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu)
     button1.pack(pady=10, padx=10, fill='x')
 
-    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu)
+    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu, command=update_info_user)
     button2.pack(pady=10, padx=10, fill='x')
 
     button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu, command=add_course)
@@ -222,6 +224,8 @@ def gestao_alunos():
 
 def add_course(): #-----------------------------add course-------------------------
     clear_content_frame(main_frame)
+    alunos = database.alunos()
+    cursos = database.cursos()
 
     menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
     menu_frame.pack(side='left', fill='y')
@@ -250,7 +254,7 @@ def add_course(): #-----------------------------add course----------------------
     white_space = Label(center_frame)
     white_space.pack(pady=45)
 
-    alunos = database.alunos()
+
 
 
     person_title = Label(center_frame, text= 'Selecione o Aluno:', font='Arial 17')
@@ -259,7 +263,6 @@ def add_course(): #-----------------------------add course----------------------
     change_person = ttk.Combobox(center_frame, values=alunos, font='Arial 14', justify='center', state='readonly')
     change_person.pack(pady=25)
 
-    cursos = database.cursos()
 
     cursos_text = Label(center_frame, text='Selecione o Curso:', font='Arial 17')
     cursos_text.pack()
@@ -285,13 +288,214 @@ def add_course(): #-----------------------------add course----------------------
     button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu, command=gestao_alunos)
     button1.pack(pady=10, padx=10, fill='x')
 
-    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu)
+    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu, command=update_info_user)
     button2.pack(pady=10, padx=10, fill='x')
 
     button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu)
     button3.pack(pady=10, padx=10, fill='x')
 
     title_page = Label(main_frame, text='Adicionar Aluno a Curso', font='Arial 16 bold')
+    title_page.place(x=540, y=5)
+
+
+def update_info_user(): #-----------------------------add course-------------------------
+    clear_content_frame(main_frame)
+    alunos = database.alunos()
+
+    def person_info():
+        mycursor = mydb.cursor()
+
+        mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+
+        q_alunos = mycursor.fetchall()
+        nome_selecionado = change_person.get()
+        for rows in q_alunos:
+            if rows[1] == nome_selecionado:
+                aluno_nome_aux = rows[1]
+                aluno_email_aux = rows[2]
+                aluno_phone_aux = rows[3]
+                aluno_address_aux = rows[4]
+                aluno_nome.set(f'Nome: {aluno_nome_aux}')
+                aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
+                aluno_email.set(f'Email: {aluno_email_aux}')
+                aluno_morada.set(f'Morada: {aluno_address_aux}')
+
+
+    def update_info():
+        global password_origi
+
+        nome = name_entry.get()
+        email = email_entry.get()
+        telemovel = phone_entry.get()
+        morada = address_entry.get()
+
+        nome_aux = aluno_nome.get()
+        nome_aux = nome_aux.removeprefix('Nome: ')
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
+
+        password_in_lista = mycursor.fetchall()
+        for row in password_in_lista:
+            password_origi = row[0]
+
+        password = simpledialog.askstring("Senha", "Digite a sua senha:")
+
+
+        if password == password_origi:
+            if nome:
+                mycursor = mydb.cursor()
+
+                mycursor.execute(f"UPDATE q_utilizadores SET utilizador_nome = '{nome}' WHERE utilizador_nome = '{nome_aux}'")
+
+                mydb.commit()
+
+            if email:
+                email_aux = aluno_email.get()
+                email_aux = email_aux.removeprefix('Email: ')
+
+                mycursor = mydb.cursor()
+
+                mycursor.execute(f"UPDATE q_utilizadores SET utilizador_email = '{email}' WHERE utilizador_email = '{email_aux}'")
+
+                mydb.commit()
+
+            if telemovel:
+                phone_aux = aluno_phone.get()
+                phone_aux = phone_aux.removeprefix('Telemóvel: ')
+
+                mycursor = mydb.cursor()
+
+                mycursor.execute(f"UPDATE q_utilizadores SET utilizador_contacto = '{telemovel}' WHERE utilizador_contacto = '{phone_aux}'")
+
+                mydb.commit()
+
+            if morada:
+                address_aux = aluno_morada.get()
+                address_aux = address_aux.removeprefix('Morada: ')
+
+                mycursor = mydb.cursor()
+
+                mycursor.execute(f"UPDATE q_utilizadores SET utilizador_morada = '{morada}' WHERE utilizador_morada = '{address_aux}'")
+
+                mydb.commit()
+
+
+
+
+
+    menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
+    menu_frame.pack(side='left', fill='y')
+
+    button1 = Button(menu_frame, text='Gestão de Utilizadores', **button_styles)
+    button1.pack(pady=10, padx=20, fill='x')
+
+    button2 = Button(menu_frame, text='Gestão de Alunos', **button_styles)
+    button2.pack(pady=10, padx=20, fill='x')
+
+    button3 = Button(menu_frame, text='Gestão de Aulas e Horários', **button_styles)
+    button3.pack(pady=10, padx=20, fill='both')
+
+    button4 = Button(menu_frame, text='Gestão de Pagamentos', **button_styles)
+    button4.pack(pady=10, padx=20, fill='x')
+
+    button5 = Button(menu_frame, text='Performance de Alunos', **button_styles)
+    button5.pack(pady=10, padx=20, fill='x')
+
+    LEFTFRAME = Frame(main_frame)  # --------------------------------left frame---------------------------------
+    LEFTFRAME.pack(side='left', padx=50, fill='both', expand=True)
+
+    old_info_person_frame = Frame(LEFTFRAME)  # --------------------------------left frame(left side) image section----------
+    old_info_person_frame.pack(pady=20, side='left', anchor='n')
+
+
+
+
+    white_space = Label(old_info_person_frame)
+    white_space.pack(pady=5)
+
+
+    title_old_info = Label(old_info_person_frame, text='Dados Atuais:', font='Arial 18 bold')
+    title_old_info.pack(pady=25)
+
+
+    aluno_nome = StringVar()
+    aluno_phone = StringVar()
+    aluno_email = StringVar()
+    aluno_morada = StringVar()
+
+    aluno_nome.set('Nome: ')
+    aluno_phone.set('Telemóvel: ')
+    aluno_email.set('Email: ')
+    aluno_morada.set('Morada: ')
+
+    info_person_name = Label(old_info_person_frame, textvariable=aluno_nome, font='Arial 16')
+    info_person_name.pack(padx=30, pady=25, anchor='w')
+
+    info_person_email = Label(old_info_person_frame, textvariable=aluno_email, font='Arial 16')
+    info_person_email.pack(padx=30, pady=25, anchor='w')
+
+    info_person_phone = Label(old_info_person_frame, textvariable=aluno_phone, font='Arial 16')
+    info_person_phone.pack(padx=30, pady=25, anchor='w')
+
+    info_person_address = Label(old_info_person_frame, textvariable=aluno_morada, font='Arial 16')
+    info_person_address.pack(padx=30, pady=25, anchor='w')
+
+
+
+    change_person = ttk.Combobox(old_info_person_frame, values=alunos, font='RArial 14', justify='center',state='readonly')
+    change_person.pack(pady=15)
+
+    select_button = ttk.Button(old_info_person_frame, text='Selecionar aluno acima', width=40, command=person_info)
+    select_button.pack(pady=5)
+
+
+    new_info_person = Frame(LEFTFRAME)  # --------------------------------left frame(right side) info section------------------
+    new_info_person.pack(pady=20, side='left', anchor='n')
+
+    white_space = Label(new_info_person)
+    white_space.pack(pady=5)
+
+    title_new_info = Label(new_info_person, text='Novos dados:', font='Arial 18 bold')
+    title_new_info.pack(pady=25)
+
+
+    name_entry = ttk.Entry(new_info_person, font='Arial 16')
+    name_entry.pack(padx=30, pady=25, anchor='w')
+
+    email_entry = ttk.Entry(new_info_person, font='Arial 16')
+    email_entry.pack(padx=30, pady=25, anchor='w')
+
+    phone_entry = ttk.Entry(new_info_person, font='Arial 16')
+    phone_entry.pack(padx=30, pady=25, anchor='w')
+
+    address_entry = ttk.Entry(new_info_person, font='Arial 16')
+    address_entry.pack(padx=30, pady=25, anchor='w')
+
+    update_button = Button(new_info_person, text='Atualizar dados', width=20, command=update_info, fg='white', bg='#6686ba', font=FONT, height=1, cursor='hand2')
+    update_button.pack(pady=25)
+
+
+
+
+
+    RIGHTFRAME = Frame(main_frame)  # --------------------------------rigth frame------------------------------------------
+    RIGHTFRAME.pack(side='left', fill='both', anchor='e', expand=True)
+
+    menu_alunos = Frame(RIGHTFRAME, bg='#b3b5b4', width=150, height=50)
+    menu_alunos.pack(anchor='ne', expand=True)
+
+    button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu)
+    button1.pack(pady=10, padx=10, fill='x')
+
+    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu, command=update_info_user)
+    button2.pack(pady=10, padx=10, fill='x')
+
+    button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu, command=add_course)
+    button3.pack(pady=10, padx=10, fill='x')
+
+    title_page = Label(main_frame, text='Informação Pessoal', font='Arial 16 bold')
     title_page.place(x=540, y=5)
 
 
