@@ -53,21 +53,38 @@ def gestao_alunos():
     clear_content_frame(main_frame)
     alunos = database.alunos()
     def person_info():
-        person_curso()
+        password_origi = None
         mycursor = mydb.cursor()
+        nome_aux = change_person.get()
 
-        mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
 
-        q_alunos = mycursor.fetchall()
-        nome_selecionado = change_person.get()
-        for rows in q_alunos:
-            if rows[1] == nome_selecionado:
-                aluno_nome_aux = rows[1]
-                aluno_email_aux = rows[2]
-                aluno_phone_aux = rows[3]
-                aluno_nome.set(f'Nome: {aluno_nome_aux}')
-                aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
-                aluno_email.set(f'Email: {aluno_email_aux}')
+        password_in_lista = mycursor.fetchall()
+        for row in password_in_lista:
+            password_origi = row[0]
+
+        password = simpledialog.askstring("Senha", "Digite a sua senha:")
+
+        if password == password_origi:
+            person_curso()
+            mycursor = mydb.cursor()
+
+            mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+
+            q_alunos = mycursor.fetchall()
+            nome_selecionado = change_person.get()
+            for rows in q_alunos:
+                if rows[1] == nome_selecionado:
+                    aluno_nome_aux = rows[1]
+                    aluno_email_aux = rows[2]
+                    aluno_phone_aux = rows[3]
+                    aluno_nome.set(f'Nome: {aluno_nome_aux}')
+                    aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
+                    aluno_email.set(f'Email: {aluno_email_aux}')
+        else:
+            messagebox.showerror('Erro!', 'Senha Incorreta')
+
+
 
 
     def person_curso():
@@ -96,18 +113,37 @@ def gestao_alunos():
 
 
     def delete_aluno():
+        password_origi = None
+
+        nome_aux = aluno_nome.get()
+        nome_aux = nome_aux.removeprefix('Nome: ')
+
         mycursor = mydb.cursor()
-        aluno = change_person.get()
-        if aluno:
-            response = messagebox.askyesno('Tem a certeza?', 'Tem a certeza que quer eliminar este aluno?')
-            if response:
-                mycursor.execute(f"DELETE FROM q_utilizadores WHERE utilizador_nome = '{aluno}'")
-                mydb.commit()
-                messagebox.showinfo('Sucesso', 'O seu aluno foi eliminado')
+
+        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
+
+        password_in_lista = mycursor.fetchall()
+        for row in password_in_lista:
+            password_origi = row[0]
+
+
+        password = simpledialog.askstring("Senha", "Digite a sua senha:")
+
+        if password == password_origi:
+            mycursor = mydb.cursor()
+
+            if nome_aux:
+                response = messagebox.askyesno('Tem a certeza?', 'Tem a certeza que quer eliminar este aluno?')
+                if response:
+                    mycursor.execute(f"DELETE FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
+                    mydb.commit()
+                    messagebox.showinfo('Sucesso', 'O seu aluno foi eliminado')
+                else:
+                    pass
             else:
-                pass
+                messagebox.showerror('Erro', 'Selecione um aluno antes de eliminá-lo')
         else:
-            messagebox.showerror('Erro', 'Selecione um aluno antes de eliminá-lo')
+            messagebox.showerror('Erro!', 'Senha Incorreta')
 
 
     menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
@@ -222,107 +258,46 @@ def gestao_alunos():
 
 
 
-def add_course(): #-----------------------------add course-------------------------
-    clear_content_frame(main_frame)
-    alunos = database.alunos()
-    cursos = database.cursos()
-
-    menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
-    menu_frame.pack(side='left', fill='y')
-
-    button1 = Button(menu_frame, text='Gestão de Utilizadores', **button_styles)
-    button1.pack(pady=10, padx=20, fill='x')
-
-    button2 = Button(menu_frame, text='Gestão de Alunos', **button_styles)
-    button2.pack(pady=10, padx=20, fill='x')
-
-    button3 = Button(menu_frame, text='Gestão de Aulas e Horários', **button_styles)
-    button3.pack(pady=10, padx=20, fill='both')
-
-    button4 = Button(menu_frame, text='Gestão de Pagamentos', **button_styles)
-    button4.pack(pady=10, padx=20, fill='x')
-
-    button5 = Button(menu_frame, text='Performance de Alunos', **button_styles)
-    button5.pack(pady=10, padx=20, fill='x')
-
-
-    center_frame = Frame(main_frame)  # --------------------------------left frame---------------------------------
-    center_frame.pack(side='left', fill='both', expand=True)
-
-
-
-    white_space = Label(center_frame)
-    white_space.pack(pady=45)
-
-
-
-
-    person_title = Label(center_frame, text= 'Selecione o Aluno:', font='Arial 17')
-    person_title.pack()
-
-    change_person = ttk.Combobox(center_frame, values=alunos, font='Arial 14', justify='center', state='readonly')
-    change_person.pack(pady=25)
-
-
-    cursos_text = Label(center_frame, text='Selecione o Curso:', font='Arial 17')
-    cursos_text.pack()
-
-    change_person = ttk.Combobox(center_frame, values=cursos, font='Arial 14', justify='center', state='readonly', width=30)
-    change_person.pack(pady=25)
-
-    pagamento_text = Label(center_frame, text='Selecione o Método de pagamento:', font='Arial 17')
-    pagamento_text.pack()
-
-    change_pagamento = ttk.Combobox(center_frame, values=['Credit Card', 'PayPal', 'Bank Transfer', 'Cash'], font='Arial 14', justify='center', state='readonly', width=20)
-    change_pagamento.pack(pady=25)
-
-    change_pagamento = Button(center_frame, text='Adicionar Aluno ao Curso', fg='white', bg='green', font='Arial 16', cursor='hand2')
-    change_pagamento.pack(pady=25)
-
-    RIGHTMENU_FRAME = Frame(main_frame)
-    RIGHTMENU_FRAME.pack(side='left', fill='both')
-
-    menu_alunos = Frame(RIGHTMENU_FRAME, bg='#b3b5b4', width=150, height=50)
-    menu_alunos.pack(anchor='ne', expand=True)
-
-    button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu, command=gestao_alunos)
-    button1.pack(pady=10, padx=10, fill='x')
-
-    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu, command=update_info_user)
-    button2.pack(pady=10, padx=10, fill='x')
-
-    button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu)
-    button3.pack(pady=10, padx=10, fill='x')
-
-    title_page = Label(main_frame, text='Adicionar Aluno a Curso', font='Arial 16 bold')
-    title_page.place(x=540, y=5)
-
-
 def update_info_user(): #-----------------------------add course-------------------------
     clear_content_frame(main_frame)
     alunos = database.alunos()
 
     def person_info():
+        password_origi = None
         mycursor = mydb.cursor()
+        nome_aux = change_person.get()
 
-        mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
 
-        q_alunos = mycursor.fetchall()
-        nome_selecionado = change_person.get()
-        for rows in q_alunos:
-            if rows[1] == nome_selecionado:
-                aluno_nome_aux = rows[1]
-                aluno_email_aux = rows[2]
-                aluno_phone_aux = rows[3]
-                aluno_address_aux = rows[4]
-                aluno_nome.set(f'Nome: {aluno_nome_aux}')
-                aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
-                aluno_email.set(f'Email: {aluno_email_aux}')
-                aluno_morada.set(f'Morada: {aluno_address_aux}')
+        password_in_lista = mycursor.fetchall()
+        for row in password_in_lista:
+            password_origi = row[0]
 
+        password = simpledialog.askstring("Senha", "Digite a sua senha:")
+
+        if password == password_origi:
+            mycursor = mydb.cursor()
+
+            mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+
+            q_alunos = mycursor.fetchall()
+            nome_selecionado = change_person.get()
+            for rows in q_alunos:
+                if rows[1] == nome_selecionado:
+                    aluno_nome_aux = rows[1]
+                    aluno_email_aux = rows[2]
+                    aluno_phone_aux = rows[3]
+                    aluno_address_aux = rows[4]
+                    aluno_nome.set(f'Nome: {aluno_nome_aux}')
+                    aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
+                    aluno_email.set(f'Email: {aluno_email_aux}')
+                    aluno_morada.set(f'Morada: {aluno_address_aux}')
+        else:
+            messagebox.showerror('Erro!', 'Senha Incorreta')
 
     def update_info():
-        global password_origi
+        password_origi = None
+        data_change = 0
 
         nome = name_entry.get()
         email = email_entry.get()
@@ -345,6 +320,7 @@ def update_info_user(): #-----------------------------add course----------------
 
         if password == password_origi:
             if nome:
+                data_change = 1
                 mycursor = mydb.cursor()
 
                 mycursor.execute(f"UPDATE q_utilizadores SET utilizador_nome = '{nome}' WHERE utilizador_nome = '{nome_aux}'")
@@ -352,6 +328,7 @@ def update_info_user(): #-----------------------------add course----------------
                 mydb.commit()
 
             if email:
+                data_change = 1
                 email_aux = aluno_email.get()
                 email_aux = email_aux.removeprefix('Email: ')
 
@@ -362,6 +339,7 @@ def update_info_user(): #-----------------------------add course----------------
                 mydb.commit()
 
             if telemovel:
+                data_change = 1
                 phone_aux = aluno_phone.get()
                 phone_aux = phone_aux.removeprefix('Telemóvel: ')
 
@@ -372,6 +350,7 @@ def update_info_user(): #-----------------------------add course----------------
                 mydb.commit()
 
             if morada:
+                data_change = 1
                 address_aux = aluno_morada.get()
                 address_aux = address_aux.removeprefix('Morada: ')
 
@@ -380,7 +359,13 @@ def update_info_user(): #-----------------------------add course----------------
                 mycursor.execute(f"UPDATE q_utilizadores SET utilizador_morada = '{morada}' WHERE utilizador_morada = '{address_aux}'")
 
                 mydb.commit()
+        else:
+            messagebox.showerror('Erro!', 'Senha Incorreta')
 
+        if data_change == 1:
+            messagebox.showinfo('Sucesso', 'Os seus dados foram alterados!')
+        elif data_change == 0:
+            messagebox.showerror('Erro!', 'Nenhuma alteração foi inserida, verifique os novos dados')
 
 
 
@@ -486,17 +471,94 @@ def update_info_user(): #-----------------------------add course----------------
     menu_alunos = Frame(RIGHTFRAME, bg='#b3b5b4', width=150, height=50)
     menu_alunos.pack(anchor='ne', expand=True)
 
-    button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu)
+    button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu, command=gestao_alunos)
     button1.pack(pady=10, padx=10, fill='x')
 
-    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu, command=update_info_user)
+    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu)
     button2.pack(pady=10, padx=10, fill='x')
 
     button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu, command=add_course)
     button3.pack(pady=10, padx=10, fill='x')
 
-    title_page = Label(main_frame, text='Informação Pessoal', font='Arial 16 bold')
+    title_page = Label(main_frame, text='Alterar dados de Aluno', font='Arial 16 bold')
     title_page.place(x=540, y=5)
+
+
+
+def add_course(): #-----------------------------add course-------------------------
+    clear_content_frame(main_frame)
+    alunos = database.alunos()
+    cursos = database.cursos()
+
+    menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
+    menu_frame.pack(side='left', fill='y')
+
+    button1 = Button(menu_frame, text='Gestão de Utilizadores', **button_styles)
+    button1.pack(pady=10, padx=20, fill='x')
+
+    button2 = Button(menu_frame, text='Gestão de Alunos', **button_styles)
+    button2.pack(pady=10, padx=20, fill='x')
+
+    button3 = Button(menu_frame, text='Gestão de Aulas e Horários', **button_styles)
+    button3.pack(pady=10, padx=20, fill='both')
+
+    button4 = Button(menu_frame, text='Gestão de Pagamentos', **button_styles)
+    button4.pack(pady=10, padx=20, fill='x')
+
+    button5 = Button(menu_frame, text='Performance de Alunos', **button_styles)
+    button5.pack(pady=10, padx=20, fill='x')
+
+
+    center_frame = Frame(main_frame)  # --------------------------------left frame---------------------------------
+    center_frame.pack(side='left', fill='both', expand=True)
+
+
+
+    white_space = Label(center_frame)
+    white_space.pack(pady=45)
+
+
+
+
+    person_title = Label(center_frame, text= 'Selecione o Aluno:', font='Arial 17')
+    person_title.pack()
+
+    change_person = ttk.Combobox(center_frame, values=alunos, font='Arial 14', justify='center', state='readonly')
+    change_person.pack(pady=25)
+
+
+    cursos_text = Label(center_frame, text='Selecione o Curso:', font='Arial 17')
+    cursos_text.pack()
+
+    change_person = ttk.Combobox(center_frame, values=cursos, font='Arial 14', justify='center', state='readonly', width=30)
+    change_person.pack(pady=25)
+
+
+
+    add_to_course = Button(center_frame, text='Adicionar Aluno ao Curso', fg='white', bg='green', font='Arial 16', cursor='hand2')
+    add_to_course.pack(pady=25)
+
+    RIGHTMENU_FRAME = Frame(main_frame)
+    RIGHTMENU_FRAME.pack(side='left', fill='both')
+
+    menu_alunos = Frame(RIGHTMENU_FRAME, bg='#b3b5b4', width=150, height=50)
+    menu_alunos.pack(anchor='ne', expand=True)
+
+    button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu, command=gestao_alunos)
+    button1.pack(pady=10, padx=10, fill='x')
+
+    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu, command=update_info_user)
+    button2.pack(pady=10, padx=10, fill='x')
+
+    button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu)
+    button3.pack(pady=10, padx=10, fill='x')
+
+    title_page = Label(main_frame, text='Adicionar Aluno a Curso', font='Arial 16 bold')
+    title_page.place(x=540, y=5)
+
+
+
+
 
 
 def clear_content_frame(frame):
