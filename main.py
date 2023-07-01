@@ -64,28 +64,25 @@ def gestao_alunos():
             password_origi = row[0]
 
         password = simpledialog.askstring("Senha", "Digite a sua senha:")
+        if password is not None:
+            if password == password_origi:
+                person_curso()
+                mycursor = mydb.cursor()
 
-        if password == password_origi:
-            person_curso()
-            mycursor = mydb.cursor()
+                mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
 
-            mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
-
-            q_alunos = mycursor.fetchall()
-            nome_selecionado = change_person.get()
-            for rows in q_alunos:
-                if rows[1] == nome_selecionado:
-                    aluno_nome_aux = rows[1]
-                    aluno_email_aux = rows[2]
-                    aluno_phone_aux = rows[3]
-                    aluno_nome.set(f'Nome: {aluno_nome_aux}')
-                    aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
-                    aluno_email.set(f'Email: {aluno_email_aux}')
-        else:
-            messagebox.showerror('Erro!', 'Senha Incorreta')
-
-
-
+                q_alunos = mycursor.fetchall()
+                nome_selecionado = change_person.get()
+                for rows in q_alunos:
+                    if rows[1] == nome_selecionado:
+                        aluno_nome_aux = rows[1]
+                        aluno_email_aux = rows[2]
+                        aluno_phone_aux = rows[3]
+                        aluno_nome.set(f'Nome: {aluno_nome_aux}')
+                        aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
+                        aluno_email.set(f'Email: {aluno_email_aux}')
+            else:
+                messagebox.showerror('Erro!', 'Senha Incorreta')
 
     def person_curso():
         info_person_courses.delete(0, last=6)
@@ -113,38 +110,25 @@ def gestao_alunos():
 
 
     def delete_aluno():
-        password_origi = None
 
         nome_aux = aluno_nome.get()
         nome_aux = nome_aux.removeprefix('Nome: ')
 
         mycursor = mydb.cursor()
 
-        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
-
-        password_in_lista = mycursor.fetchall()
-        for row in password_in_lista:
-            password_origi = row[0]
-
-
-        password = simpledialog.askstring("Senha", "Digite a sua senha:")
-
-        if password == password_origi:
-            mycursor = mydb.cursor()
-
-            if nome_aux:
-                response = messagebox.askyesno('Tem a certeza?', 'Tem a certeza que quer eliminar este aluno?')
-                if response:
-                    mycursor.execute(f"DELETE FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
-                    mydb.commit()
-                    messagebox.showinfo('Sucesso', 'O seu aluno foi eliminado')
-                else:
-                    pass
+        if nome_aux:
+            response = messagebox.askyesno('Tem a certeza?', 'Tem a certeza que quer eliminar este aluno?')
+            if response:
+                mycursor.execute(f"DELETE FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
+                mydb.commit()
+                messagebox.showinfo('Sucesso', 'O seu aluno foi eliminado')
             else:
-                messagebox.showerror('Erro', 'Selecione um aluno antes de eliminá-lo')
+                pass
         else:
-            messagebox.showerror('Erro!', 'Senha Incorreta')
+            messagebox.showerror('Erro', 'Selecione um aluno antes de eliminá-lo')
 
+    def ignore_click(event):
+        return "break"
 
     menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
     menu_frame.pack(side='left', fill='y')
@@ -229,6 +213,7 @@ def gestao_alunos():
 
     info_person_courses = Listbox(info_person, font='Arial 14', width=30, borderwidth=0)
     info_person_courses.pack(padx=30, pady=15, anchor='w')
+    info_person_courses.bind("<Button-1>", ignore_click)
 
 
 
@@ -250,6 +235,9 @@ def gestao_alunos():
 
     button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu, command=add_course)
     button3.pack(pady=10, padx=10, fill='x')
+
+    button4 = Button(menu_alunos, text='Remover Aluno de um Curso', **button_styles_mini_menu, command=remove_course)
+    button4.pack(pady=10, padx=10, fill='x')
 
     title_page = Label(main_frame, text='Informação Pessoal', font='Arial 16 bold')
     title_page.place(x=540, y=5)
@@ -275,25 +263,26 @@ def update_info_user(): #-----------------------------add course----------------
 
         password = simpledialog.askstring("Senha", "Digite a sua senha:")
 
-        if password == password_origi:
-            mycursor = mydb.cursor()
+        if password is not None:
+            if password == password_origi:
+                mycursor = mydb.cursor()
 
-            mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+                mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
 
-            q_alunos = mycursor.fetchall()
-            nome_selecionado = change_person.get()
-            for rows in q_alunos:
-                if rows[1] == nome_selecionado:
-                    aluno_nome_aux = rows[1]
-                    aluno_email_aux = rows[2]
-                    aluno_phone_aux = rows[3]
-                    aluno_address_aux = rows[4]
-                    aluno_nome.set(f'Nome: {aluno_nome_aux}')
-                    aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
-                    aluno_email.set(f'Email: {aluno_email_aux}')
-                    aluno_morada.set(f'Morada: {aluno_address_aux}')
-        else:
-            messagebox.showerror('Erro!', 'Senha Incorreta')
+                q_alunos = mycursor.fetchall()
+                nome_selecionado = change_person.get()
+                for rows in q_alunos:
+                    if rows[1] == nome_selecionado:
+                        aluno_nome_aux = rows[1]
+                        aluno_email_aux = rows[2]
+                        aluno_phone_aux = rows[3]
+                        aluno_address_aux = rows[4]
+                        aluno_nome.set(f'Nome: {aluno_nome_aux}')
+                        aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
+                        aluno_email.set(f'Email: {aluno_email_aux}')
+                        aluno_morada.set(f'Morada: {aluno_address_aux}')
+            else:
+                messagebox.showerror('Erro!', 'Senha Incorreta')
 
     def update_info():
         password_origi = None
@@ -317,55 +306,59 @@ def update_info_user(): #-----------------------------add course----------------
 
         password = simpledialog.askstring("Senha", "Digite a sua senha:")
 
+        if password is not None:
+            if password == password_origi:
+                if nome:
+                    data_change = 1
+                    mycursor = mydb.cursor()
 
-        if password == password_origi:
-            if nome:
-                data_change = 1
-                mycursor = mydb.cursor()
+                    mycursor.execute(
+                        f"UPDATE q_utilizadores SET utilizador_nome = '{nome}' WHERE utilizador_nome = '{nome_aux}'")
 
-                mycursor.execute(f"UPDATE q_utilizadores SET utilizador_nome = '{nome}' WHERE utilizador_nome = '{nome_aux}'")
+                    mydb.commit()
 
-                mydb.commit()
+                if email:
+                    data_change = 1
+                    email_aux = aluno_email.get()
+                    email_aux = email_aux.removeprefix('Email: ')
 
-            if email:
-                data_change = 1
-                email_aux = aluno_email.get()
-                email_aux = email_aux.removeprefix('Email: ')
+                    mycursor = mydb.cursor()
 
-                mycursor = mydb.cursor()
+                    mycursor.execute(
+                        f"UPDATE q_utilizadores SET utilizador_email = '{email}' WHERE utilizador_email = '{email_aux}'")
 
-                mycursor.execute(f"UPDATE q_utilizadores SET utilizador_email = '{email}' WHERE utilizador_email = '{email_aux}'")
+                    mydb.commit()
 
-                mydb.commit()
+                if telemovel:
+                    data_change = 1
+                    phone_aux = aluno_phone.get()
+                    phone_aux = phone_aux.removeprefix('Telemóvel: ')
 
-            if telemovel:
-                data_change = 1
-                phone_aux = aluno_phone.get()
-                phone_aux = phone_aux.removeprefix('Telemóvel: ')
+                    mycursor = mydb.cursor()
 
-                mycursor = mydb.cursor()
+                    mycursor.execute(
+                        f"UPDATE q_utilizadores SET utilizador_contacto = '{telemovel}' WHERE utilizador_contacto = '{phone_aux}'")
 
-                mycursor.execute(f"UPDATE q_utilizadores SET utilizador_contacto = '{telemovel}' WHERE utilizador_contacto = '{phone_aux}'")
+                    mydb.commit()
 
-                mydb.commit()
+                if morada:
+                    data_change = 1
+                    address_aux = aluno_morada.get()
+                    address_aux = address_aux.removeprefix('Morada: ')
 
-            if morada:
-                data_change = 1
-                address_aux = aluno_morada.get()
-                address_aux = address_aux.removeprefix('Morada: ')
+                    mycursor = mydb.cursor()
 
-                mycursor = mydb.cursor()
+                    mycursor.execute(
+                        f"UPDATE q_utilizadores SET utilizador_morada = '{morada}' WHERE utilizador_morada = '{address_aux}'")
 
-                mycursor.execute(f"UPDATE q_utilizadores SET utilizador_morada = '{morada}' WHERE utilizador_morada = '{address_aux}'")
+                    mydb.commit()
+            else:
+                messagebox.showerror('Erro!', 'Senha Incorreta')
 
-                mydb.commit()
-        else:
-            messagebox.showerror('Erro!', 'Senha Incorreta')
-
-        if data_change == 1:
-            messagebox.showinfo('Sucesso', 'Os seus dados foram alterados!')
-        elif data_change == 0:
-            messagebox.showerror('Erro!', 'Nenhuma alteração foi inserida, verifique os novos dados')
+            if data_change == 1:
+                messagebox.showinfo('Sucesso', 'Os seus dados foram alterados!')
+            elif data_change == 0:
+                messagebox.showerror('Erro!', 'Nenhuma alteração foi inserida, verifique os novos dados')
 
 
 
@@ -462,9 +455,6 @@ def update_info_user(): #-----------------------------add course----------------
     update_button.pack(pady=25)
 
 
-
-
-
     RIGHTFRAME = Frame(main_frame)  # --------------------------------rigth frame------------------------------------------
     RIGHTFRAME.pack(side='left', fill='both', anchor='e', expand=True)
 
@@ -480,6 +470,9 @@ def update_info_user(): #-----------------------------add course----------------
     button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu, command=add_course)
     button3.pack(pady=10, padx=10, fill='x')
 
+    button4 = Button(menu_alunos, text='Remover Aluno de um Curso', **button_styles_mini_menu, command=remove_course)
+    button4.pack(pady=10, padx=10, fill='x')
+
     title_page = Label(main_frame, text='Alterar dados de Aluno', font='Arial 16 bold')
     title_page.place(x=540, y=5)
 
@@ -489,6 +482,84 @@ def add_course(): #-----------------------------add course----------------------
     clear_content_frame(main_frame)
     alunos = database.alunos()
     cursos = database.cursos()
+
+    def cursoId():
+        global cursoID
+        cursoDesc = change_course.get()
+        cursoDesc = cursoDesc.split(' --- ')
+        cursoDesc = cursoDesc[0]
+
+        if cursoDesc:
+            mycursor = mydb.cursor()
+            mycursor.execute(f"SELECT curso_id FROM q_cursos WHERE curso_desc = '{cursoDesc}'")
+
+            q_curso_id = mycursor.fetchall()
+            for row in q_curso_id:
+                cursoID = row[0]
+
+            return cursoID
+
+        else:
+            messagebox.showerror('Erro', 'Insira um curso')
+
+    def alunoId():
+        global alunoID
+        personName = change_person.get()
+
+        if personName:
+            mycursor = mydb.cursor()
+            mycursor.execute(f"SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = '{personName}'")
+
+            q_aluno_id = mycursor.fetchall()
+            for row in q_aluno_id:
+                alunoID = row[0]
+            return alunoID
+        else:
+            messagebox.showerror('Erro', 'Insira um aluno')
+
+
+    def insert_course():
+        global password_origi
+        aluno_id = alunoId()
+        curso_id = cursoId()
+        cursoDesc = change_course.get()
+        cursoDesc = cursoDesc.split(' --- ')
+        cursoDesc = cursoDesc[0]
+        cursoInscrito = 0
+
+        mycursor = mydb.cursor()
+        mycursor.execute(f"SELECT aluno_id, curso_id FROM q_alunos_cursos WHERE aluno_id = {aluno_id} AND curso_id = {curso_id}")
+        found = mycursor.fetchall()
+
+        if found:
+            cursoInscrito = 1
+        else:
+            cursoInscrito = 0
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_id = '{aluno_id}'")
+
+        password_in_lista = mycursor.fetchall()
+        for row in password_in_lista:
+            password_origi = row[0]
+
+        password = simpledialog.askstring("Senha", "Digite a sua senha:")
+
+        if password is not None:
+            if password == password_origi:
+                if cursoInscrito == 0:
+                    mycursor = mydb.cursor()
+                    mycursor.execute(
+                        f"INSERT INTO q_alunos_cursos (aluno_id, curso_id) VALUES ({aluno_id}, {curso_id})")
+                    mydb.commit()
+                    messagebox.showinfo('Sucesso', f'O seu aluno foi inserido no curso: {cursoDesc}')
+                    messagebox.showinfo('Pagamento', 'Depois não se esqueça de pagar a incrição do curso..')
+                else:
+                    messagebox.showerror('Erro', 'O aluno selecionado já está inscrito nesse curso!')
+            else:
+                messagebox.showerror('Erro!', 'Senha Incorreta')
+
 
     menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
     menu_frame.pack(side='left', fill='y')
@@ -530,12 +601,12 @@ def add_course(): #-----------------------------add course----------------------
     cursos_text = Label(center_frame, text='Selecione o Curso:', font='Arial 17')
     cursos_text.pack()
 
-    change_person = ttk.Combobox(center_frame, values=cursos, font='Arial 14', justify='center', state='readonly', width=30)
-    change_person.pack(pady=25)
+    change_course = ttk.Combobox(center_frame, values=cursos, font='Arial 14', justify='center', state='readonly', width=30)
+    change_course.pack(pady=25)
 
 
 
-    add_to_course = Button(center_frame, text='Adicionar Aluno ao Curso', fg='white', bg='green', font='Arial 16', cursor='hand2')
+    add_to_course = Button(center_frame, text='Adicionar Aluno ao Curso', fg='white', bg='green', font='Arial 16', cursor='hand2', command=insert_course)
     add_to_course.pack(pady=25)
 
     RIGHTMENU_FRAME = Frame(main_frame)
@@ -553,12 +624,157 @@ def add_course(): #-----------------------------add course----------------------
     button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu)
     button3.pack(pady=10, padx=10, fill='x')
 
-    title_page = Label(main_frame, text='Adicionar Aluno a Curso', font='Arial 16 bold')
+    button4 = Button(menu_alunos, text='Remover Aluno de um Curso', **button_styles_mini_menu, command=remove_course)
+    button4.pack(pady=10, padx=10, fill='x')
+
+    title_page = Label(main_frame, text='Adicionar a Curso', font='Arial 16 bold')
     title_page.place(x=540, y=5)
 
 
+def remove_course():
+    clear_content_frame(main_frame)
+    alunos = database.alunos()
+    cursos = database.cursos()
+
+    def cursoId():
+        global cursoID
+        cursoDesc = change_course.get()
+        cursoDesc = cursoDesc.split(' --- ')
+        cursoDesc = cursoDesc[0]
+
+        if cursoDesc:
+            mycursor = mydb.cursor()
+            mycursor.execute(f"SELECT curso_id FROM q_cursos WHERE curso_desc = '{cursoDesc}'")
+
+            q_curso_id = mycursor.fetchall()
+            for row in q_curso_id:
+                cursoID = row[0]
+
+            return cursoID
+
+        else:
+            messagebox.showerror('Erro', 'Insira um curso')
+
+    def alunoId():
+        global alunoID
+        personName = change_person.get()
+
+        if personName:
+            mycursor = mydb.cursor()
+            mycursor.execute(f"SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = '{personName}'")
+
+            q_aluno_id = mycursor.fetchall()
+            for row in q_aluno_id:
+                alunoID = row[0]
+            return alunoID
+        else:
+            messagebox.showerror('Erro', 'Insira um aluno')
+
+    def remove_course():
+        global password_origi
+        aluno_id = alunoId()
+        curso_id = cursoId()
+        cursoDesc = change_course.get()
+        cursoDesc = cursoDesc.split(' --- ')
+        cursoDesc = cursoDesc[0]
+        cursoInscrito = 0
+
+        mycursor = mydb.cursor()
+        mycursor.execute(
+            f"SELECT aluno_id, curso_id FROM q_alunos_cursos WHERE aluno_id = {aluno_id} AND curso_id = {curso_id}")
+        found = mycursor.fetchall()
+
+        if found:
+            cursoInscrito = 1
+        else:
+            cursoInscrito = 0
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_id = '{aluno_id}'")
+
+        password_in_lista = mycursor.fetchall()
+        for row in password_in_lista:
+            password_origi = row[0]
+
+        password = simpledialog.askstring("Senha", "Digite a sua senha:")
+
+        if password is not None:
+            if password == password_origi:
+                if cursoInscrito == 1:
+                    mycursor = mydb.cursor()
+                    mycursor.execute(
+                        f"DELETE FROM q_alunos_cursos WHERE aluno_id = ({aluno_id} AND curso_id = {curso_id})")
+                    mydb.commit()
+                    messagebox.showinfo('Sucesso', f'O seu aluno foi removido do curso: {cursoDesc}')
+
+                else:
+                    messagebox.showerror('Erro', 'O aluno selecionado não está inscrito nesse curso!')
+            else:
+                messagebox.showerror('Erro!', 'Senha Incorreta')
 
 
+    menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
+    menu_frame.pack(side='left', fill='y')
+
+    button1 = Button(menu_frame, text='Gestão de Utilizadores', **button_styles)
+    button1.pack(pady=10, padx=20, fill='x')
+
+    button2 = Button(menu_frame, text='Gestão de Alunos', **button_styles)
+    button2.pack(pady=10, padx=20, fill='x')
+
+    button3 = Button(menu_frame, text='Gestão de Aulas e Horários', **button_styles)
+    button3.pack(pady=10, padx=20, fill='both')
+
+    button4 = Button(menu_frame, text='Gestão de Pagamentos', **button_styles)
+    button4.pack(pady=10, padx=20, fill='x')
+
+    button5 = Button(menu_frame, text='Performance de Alunos', **button_styles)
+    button5.pack(pady=10, padx=20, fill='x')
+
+    center_frame = Frame(main_frame)  # --------------------------------left frame---------------------------------
+    center_frame.pack(side='left', fill='both', expand=True)
+
+    white_space = Label(center_frame)
+    white_space.pack(pady=45)
+
+    person_title = Label(center_frame, text='Selecione o Aluno:', font='Arial 17')
+    person_title.pack()
+
+    change_person = ttk.Combobox(center_frame, values=alunos, font='Arial 14', justify='center', state='readonly')
+    change_person.pack(pady=25)
+
+    cursos_text = Label(center_frame, text='Selecione o Curso:', font='Arial 17')
+    cursos_text.pack()
+
+    change_course = ttk.Combobox(center_frame, values=cursos, font='Arial 14', justify='center', state='readonly',
+                                 width=30)
+    change_course.pack(pady=25)
+
+    add_to_course = Button(center_frame, text='Remover Aluno do Curso', fg='white', bg='red', font='Arial 16',
+                           cursor='hand2', command=remove_course)
+    add_to_course.pack(pady=25)
+
+    RIGHTMENU_FRAME = Frame(main_frame)
+    RIGHTMENU_FRAME.pack(side='left', fill='both')
+
+    menu_alunos = Frame(RIGHTMENU_FRAME, bg='#b3b5b4', width=150, height=50)
+    menu_alunos.pack(anchor='ne', expand=True)
+
+    button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu, command=gestao_alunos)
+    button1.pack(pady=10, padx=10, fill='x')
+
+    button2 = Button(menu_alunos, text='Alterar dados de Aluno', **button_styles_mini_menu, command=update_info_user)
+    button2.pack(pady=10, padx=10, fill='x')
+
+    button3 = Button(menu_alunos, text='Adicionar Aluno a Curso', **button_styles_mini_menu, command=add_course)
+    button3.pack(pady=10, padx=10, fill='x')
+
+    button4 = Button(menu_alunos, text='Remover Aluno de um Curso', **button_styles_mini_menu)
+    button4.pack(pady=10, padx=10, fill='x')
+
+    title_page = Label(main_frame, text='Remover do Curso', font='Arial 16 bold')
+    title_page.place(x=540, y=5)
 
 
 def clear_content_frame(frame):
