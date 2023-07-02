@@ -53,11 +53,11 @@ def gestao_alunos():
     clear_content_frame(main_frame)
     alunos = database.alunos()
     def person_info():
-        try:
-            password_origi = None
-            mycursor = mydb.cursor()
-            nome_aux = change_person.get()
+        password_origi = None
+        mycursor = mydb.cursor()
+        nome_aux = change_person.get()
 
+        if nome_aux:
             mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
 
             password_in_lista = mycursor.fetchall()
@@ -84,8 +84,10 @@ def gestao_alunos():
                             aluno_email.set(f'Email: {aluno_email_aux}')
                 else:
                     messagebox.showerror('Erro!', 'Senha Incorreta')
-        except:
-            messagebox.showerror('Erro!', 'Erro na base de dados, tente novamente mais tarde')
+        else:
+            messagebox.showerror('Erro!', 'Selecione um aluno')
+
+
     def person_curso():
         info_person_courses.delete(0, last=6)
 
