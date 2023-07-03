@@ -64,26 +64,32 @@ def gestao_alunos():
             for row in password_in_lista:
                 password_origi = row[0]
 
-            password = simpledialog.askstring("Senha", "Digite a sua senha:")
-            if password is not None:
-                if password == password_origi:
-                    person_curso()
-                    mycursor = mydb.cursor()
+            if password_origi:
 
-                    mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+                password = simpledialog.askstring("Senha", "Digite a sua senha:")
 
-                    q_alunos = mycursor.fetchall()
-                    nome_selecionado = change_person.get()
-                    for rows in q_alunos:
-                        if rows[1] == nome_selecionado:
-                            aluno_nome_aux = rows[1]
-                            aluno_email_aux = rows[2]
-                            aluno_phone_aux = rows[3]
-                            aluno_nome.set(f'Nome: {aluno_nome_aux}')
-                            aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
-                            aluno_email.set(f'Email: {aluno_email_aux}')
-                else:
-                    messagebox.showerror('Erro!', 'Senha Incorreta')
+                if password is not None:
+                    if password == password_origi:
+                        person_curso()
+                        mycursor = mydb.cursor()
+
+                        mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+
+                        q_alunos = mycursor.fetchall()
+                        nome_selecionado = change_person.get()
+                        for rows in q_alunos:
+                            if rows[1] == nome_selecionado:
+                                aluno_nome_aux = rows[1]
+                                aluno_email_aux = rows[2]
+                                aluno_phone_aux = rows[3]
+                                aluno_nome.set(f'Nome: {aluno_nome_aux}')
+                                aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
+                                aluno_email.set(f'Email: {aluno_email_aux}')
+                    else:
+                        messagebox.showerror('Erro!', 'Senha Incorreta')
+
+            else:
+                messagebox.showerror('Erro!', 'Erro na base de dados, por favor tente novamente mais tarde, obrigado')
         else:
             messagebox.showerror('Erro!', 'Selecione um aluno')
 
@@ -259,34 +265,40 @@ def update_info_user(): #-----------------------------add course----------------
         mycursor = mydb.cursor()
         nome_aux = change_person.get()
 
-        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
+        if nome_aux:
+            mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
 
-        password_in_lista = mycursor.fetchall()
-        for row in password_in_lista:
-            password_origi = row[0]
+            password_in_lista = mycursor.fetchall()
+            for row in password_in_lista:
+                password_origi = row[0]
 
-        password = simpledialog.askstring("Senha", "Digite a sua senha:")
+            if password_origi:
+                password = simpledialog.askstring("Senha", "Digite a sua senha:")
 
-        if password is not None:
-            if password == password_origi:
-                mycursor = mydb.cursor()
+                if password is not None:
+                    if password == password_origi:
+                        mycursor = mydb.cursor()
 
-                mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+                        mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
 
-                q_alunos = mycursor.fetchall()
-                nome_selecionado = change_person.get()
-                for rows in q_alunos:
-                    if rows[1] == nome_selecionado:
-                        aluno_nome_aux = rows[1]
-                        aluno_email_aux = rows[2]
-                        aluno_phone_aux = rows[3]
-                        aluno_address_aux = rows[4]
-                        aluno_nome.set(f'Nome: {aluno_nome_aux}')
-                        aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
-                        aluno_email.set(f'Email: {aluno_email_aux}')
-                        aluno_morada.set(f'Morada: {aluno_address_aux}')
+                        q_alunos = mycursor.fetchall()
+                        nome_selecionado = change_person.get()
+                        for rows in q_alunos:
+                            if rows[1] == nome_selecionado:
+                                aluno_nome_aux = rows[1]
+                                aluno_email_aux = rows[2]
+                                aluno_phone_aux = rows[3]
+                                aluno_address_aux = rows[4]
+                                aluno_nome.set(f'Nome: {aluno_nome_aux}')
+                                aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
+                                aluno_email.set(f'Email: {aluno_email_aux}')
+                                aluno_morada.set(f'Morada: {aluno_address_aux}')
+                    else:
+                        messagebox.showerror('Erro!', 'Senha Incorreta')
             else:
-                messagebox.showerror('Erro!', 'Senha Incorreta')
+                messagebox.showerror('Erro!', 'Erro na base de dados, por favor tente novamente mais tarde, obrigado')
+        else:
+            messagebox.showerror('Erro!', 'Selecione um aluno')
 
     def update_info():
         password_origi = None
