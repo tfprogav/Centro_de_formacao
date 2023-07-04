@@ -6,7 +6,6 @@ import mysql.connector
 from tkinter import messagebox
 from tkinter import simpledialog
 
-
 mydb = mysql.connector.connect(
         host="localhost",
         user="root",
