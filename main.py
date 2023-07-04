@@ -125,18 +125,19 @@ def gestao_alunos():
         nome_aux = nome_aux.removeprefix('Nome: ')
 
         mycursor = mydb.cursor()
-
-        if nome_aux:
-            response = messagebox.askyesno('Tem a certeza?', 'Tem a certeza que quer eliminar este aluno?')
-            if response:
-                mycursor.execute(f"DELETE FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
-                mydb.commit()
-                messagebox.showinfo('Sucesso', 'O seu aluno foi eliminado')
+        try:
+            if nome_aux:
+                response = messagebox.askyesno('Tem a certeza?', 'Tem a certeza que quer eliminar este aluno?')
+                if response:
+                    mycursor.execute(f"DELETE FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
+                    mydb.commit()
+                    messagebox.showinfo('Sucesso', 'O seu aluno foi eliminado')
+                else:
+                    messagebox.showerror('Erro','Erro na base de dados, por favor tente novamente mais tarde, obrigado')
             else:
-                pass
-        else:
-            messagebox.showerror('Erro', 'Selecione um aluno antes de eliminá-lo')
-
+                messagebox.showerror('Erro', 'Selecione um aluno antes de eliminá-lo')
+        except:
+            messagebox.showerror('Erro', 'Erro na base de dados, por favor tente novamente mais tarde, obrigado')
     def ignore_click(event):
         return "break"
 
