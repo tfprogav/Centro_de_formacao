@@ -222,7 +222,7 @@ def gestao_alunos():
 
 
 
-    info_person_courses = Listbox(info_person, font='Arial 14', width=30, borderwidth=0)
+    info_person_courses = Listbox(info_person, font='Arial 14', width=30, borderwidth=0, bg='white')
     info_person_courses.pack(padx=30, pady=15, anchor='w')
     info_person_courses.bind("<Button-1>", ignore_click)
 
