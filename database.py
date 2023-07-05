@@ -8,7 +8,6 @@ mydb = mysql.connector.connect( #ligação á database
 )
 
 
-
 def alunos(): #lista de utilizadores com perfil 1 = aluno
     alunos = []
     mycursor = mydb.cursor()
@@ -31,15 +30,12 @@ def alunos_id(): #dicionário com alunos e o seu id
     q_utilizadores = mycursor.fetchall()
 
     for row in q_utilizadores:
-        utilizador_id = row[0]
-        utilizador_nome = row[1]
+        utilizador_id = row[0] #Key
+        utilizador_nome = row[1] #Value
         alunos_info[utilizador_id] = utilizador_nome
     return alunos_info
 
-
-
-
-def cursos(): #lista de cursos com as suas horas e preço
+def cursos():#lista de cursos com as suas horas e preço
     cursos = []
     mycursor = mydb.cursor()
 
@@ -47,12 +43,12 @@ def cursos(): #lista de cursos com as suas horas e preço
 
     q_cursos = mycursor.fetchall()
     for row in q_cursos:
-        curso = row[3]
+        curso = row[3] # O terceiro elemento é o concat
         cursos.append(curso)
     return cursos
 
 
-def password_original(nome_aux):
+def password_original(nome_aux): #Busca da senha do aluno
     global password_origi
     mycursor = mydb.cursor()
 
@@ -64,7 +60,19 @@ def password_original(nome_aux):
     return password_origi
 
 
-def aluno_nome(nome_selecionado):
+def password_original_por_id(aluno_id): #Busca da senha do aluno por id
+    global password_origi
+    mycursor = mydb.cursor()
+
+    mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_id = '{aluno_id}'")
+
+    password_in_lista = mycursor.fetchall()
+    for row in password_in_lista:
+        password_origi = row[0]
+    return password_origi
+
+
+def aluno_nome(nome_selecionado): #Vai buscar o nome do aluno selecionado
     global aluno_nome_aux
     mycursor = mydb.cursor()
 
@@ -77,7 +85,7 @@ def aluno_nome(nome_selecionado):
     return aluno_nome_aux
 
 
-def aluno_phone(nome_selecionado):
+def aluno_phone(nome_selecionado): #Vai buscar o telemóvel do aluno selecionado
     global aluno_phone_aux
     mycursor = mydb.cursor()
 
@@ -90,7 +98,7 @@ def aluno_phone(nome_selecionado):
     return aluno_phone_aux
 
 
-def aluno_email(nome_selecionado):
+def aluno_email(nome_selecionado): #Vai buscar o email do aluno selecionado
     global aluno_email_aux
     mycursor = mydb.cursor()
 
@@ -104,7 +112,7 @@ def aluno_email(nome_selecionado):
     return aluno_email_aux
 
 
-def aluno_address(nome_selecionado):
+def aluno_address(nome_selecionado): #Vai buscar a morada do aluno selecionado
     global aluno_address_aux
     mycursor = mydb.cursor()
 
@@ -118,7 +126,7 @@ def aluno_address(nome_selecionado):
     return aluno_address_aux
 
 
-def cursos_por_id(id):
+def cursos_por_id(id): #Vai buscar os cursos em que o aluno está inscrito por id
     alunos_cursos_lista = []
 
     mycursor = mydb.cursor()
@@ -132,14 +140,14 @@ def cursos_por_id(id):
     return alunos_cursos_lista
 
 
-def delete_aluno(nome_aux):
+def delete_aluno(nome_aux): #Eliminar o aluno
     mycursor = mydb.cursor()
 
     mycursor.execute(f"DELETE FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
     mydb.commit()
 
 
-def update_nome(nome, nome_aux):
+def update_nome(nome, nome_aux): #Atualizar o nome do aluno
     mycursor = mydb.cursor()
 
     mycursor.execute(f"UPDATE q_utilizadores SET utilizador_nome = '{nome}' WHERE utilizador_nome = '{nome_aux}'")
@@ -147,7 +155,7 @@ def update_nome(nome, nome_aux):
     mydb.commit()
 
 
-def update_email(email, email_aux):
+def update_email(email, email_aux): #Atualizar o email do aluno
     mycursor = mydb.cursor()
 
     mycursor.execute(f"UPDATE q_utilizadores SET utilizador_email = '{email}' WHERE utilizador_email = '{email_aux}'")
@@ -155,7 +163,7 @@ def update_email(email, email_aux):
     mydb.commit()
 
 
-def update_phone(telemovel, phone_aux):
+def update_phone(telemovel, phone_aux): #Atualizar o telemóvel do aluno
     mycursor = mydb.cursor()
 
     mycursor.execute(f"UPDATE q_utilizadores SET utilizador_contacto = '{telemovel}' WHERE utilizador_contacto = '{phone_aux}'")
@@ -163,7 +171,7 @@ def update_phone(telemovel, phone_aux):
     mydb.commit()
 
 
-def update_address(morada, address_aux):
+def update_address(morada, address_aux): #Atualizar a morada do aluno
     mycursor = mydb.cursor()
 
     mycursor.execute(f"UPDATE q_utilizadores SET utilizador_morada = '{morada}' WHERE utilizador_morada = '{address_aux}'")
@@ -171,7 +179,7 @@ def update_address(morada, address_aux):
     mydb.commit()
 
 
-def course_id(cursoDesc):
+def course_id(cursoDesc): #Vai buscar o id do curso por nome
     global cursoID
     mycursor = mydb.cursor()
     mycursor.execute(f"SELECT curso_id FROM q_cursos WHERE curso_desc = '{cursoDesc}'")
@@ -183,7 +191,7 @@ def course_id(cursoDesc):
     return cursoID
 
 
-def aluno_id(personName):
+def aluno_id(personName): #Vai buscar o id do aluno
     global alunoID
     mycursor = mydb.cursor()
     mycursor.execute(f"SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = '{personName}'")
@@ -195,7 +203,7 @@ def aluno_id(personName):
     return alunoID
 
 
-def verify_if_in_course(aluno_id, curso_id):
+def verify_if_in_course(aluno_id, curso_id): #Verifica se o aluno está inscrito no curso
     mycursor = mydb.cursor()
     mycursor.execute(f"SELECT aluno_id, curso_id FROM q_alunos_cursos WHERE aluno_id = {aluno_id} AND curso_id = {curso_id}")
     found = mycursor.fetchall()
@@ -203,13 +211,13 @@ def verify_if_in_course(aluno_id, curso_id):
     return found
 
 
-def insert_in_course(aluno_id, curso_id):
+def insert_in_course(aluno_id, curso_id): #Insere aluno no respetivo curso
     mycursor = mydb.cursor()
     mycursor.execute(f"INSERT INTO q_alunos_cursos (aluno_id, curso_id) VALUES ({aluno_id}, {curso_id})")
     mydb.commit()
 
 
-def remove_from_course(aluno_id, curso_id):
+def remove_from_course(aluno_id, curso_id): #Remove o aluno do respetivo curso
     mycursor = mydb.cursor()
     mycursor.execute(f"DELETE FROM q_alunos_cursos WHERE aluno_id = ({aluno_id} AND curso_id = {curso_id})")
     mydb.commit()
