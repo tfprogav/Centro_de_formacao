@@ -78,19 +78,6 @@ def aluno_nome(nome_selecionado):
 
 
 def aluno_phone(nome_selecionado):
-    global aluno_email_aux
-    mycursor = mydb.cursor()
-
-    mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
-
-    q_alunos = mycursor.fetchall()
-    for rows in q_alunos:
-        if rows[1] == nome_selecionado:
-            aluno_email_aux = rows[2]
-    return aluno_email_aux
-
-
-def aluno_email(nome_selecionado):
     global aluno_phone_aux
     mycursor = mydb.cursor()
 
@@ -100,8 +87,21 @@ def aluno_email(nome_selecionado):
     for rows in q_alunos:
         if rows[1] == nome_selecionado:
             aluno_phone_aux = rows[3]
-
     return aluno_phone_aux
+
+
+def aluno_email(nome_selecionado):
+    global aluno_email_aux
+    mycursor = mydb.cursor()
+
+    mycursor.execute("SELECT * FROM q_utilizadores WHERE utilizador_perfil = 1")
+
+    q_alunos = mycursor.fetchall()
+    for rows in q_alunos:
+        if rows[1] == nome_selecionado:
+            aluno_email_aux = rows[2]
+
+    return aluno_email_aux
 
 
 def aluno_address(nome_selecionado):

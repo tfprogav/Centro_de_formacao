@@ -53,7 +53,6 @@ def gestao_alunos():
     clear_content_frame(main_frame)
     alunos = database.alunos()
     def person_info():
-        password_origi = None
         nome_aux = change_person.get()
 
         if nome_aux:
@@ -81,7 +80,6 @@ def gestao_alunos():
         else:
             messagebox.showerror('Erro!', 'Selecione um aluno')
 
-
     def person_curso():
         info_person_courses.delete(0, last=6) #Reset na lista de cursos (texto)
 
@@ -92,16 +90,11 @@ def gestao_alunos():
         for curso in alunos_cursos_lista: #Vai buscar o curso na lista de cursos e insere na ListBox
             info_person_courses.insert(END, curso)
 
-
-
     def delete_aluno():
         nome_aux = aluno_nome.get()
         nome_aux = nome_aux.removeprefix('Nome: ')
 
         logic.delete_aluno(nome_aux)
-
-    def ignore_click(event):
-        return "break"
 
     menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
     menu_frame.pack(side='left', fill='y')
@@ -121,12 +114,10 @@ def gestao_alunos():
     button5 = Button(menu_frame, text='Performance de Alunos', **button_styles)
     button5.pack(pady=10, padx=20, fill='x')
 
-
-
-    LEFTFRAME = Frame(main_frame) #--------------------------------left frame---------------------------------
+    LEFTFRAME = Frame(main_frame)#--------------------------------left frame---------------------------------
     LEFTFRAME.pack(side='left', padx=50, fill='both', expand=True)
 
-    image_person_frame = Frame(LEFTFRAME) #--------------------------------left frame(left side) image section----------
+    image_person_frame = Frame(LEFTFRAME)#--------------------------------left frame(left side) image section----------
     image_person_frame.pack(pady=20, side='left', anchor='n')
 
     icon_person_original = Image.open('person_icon.png').resize((200, 200))
@@ -134,9 +125,6 @@ def gestao_alunos():
 
     icon_person = Label(image_person_frame, image=icon_person_tk)
     icon_person.pack(padx=10, pady=5)
-
-
-
 
     change_person = ttk.Combobox(image_person_frame, values=alunos, font='RArial 14', justify='center', state='readonly')
     change_person.pack(pady=5)
@@ -148,7 +136,6 @@ def gestao_alunos():
                            bg='#87232d', fg='white', command=delete_aluno)
     delete_person.pack(pady=10)
 
-
     info_person = Frame(LEFTFRAME)#--------------------------------left frame(right side) info section------------------
     info_person.pack(pady=20, side='left', anchor='n')
 
@@ -158,7 +145,6 @@ def gestao_alunos():
     aluno_nome = StringVar()
     aluno_phone = StringVar()
     aluno_email = StringVar()
-
 
     aluno_nome.set('Nome: ')
     aluno_phone.set('Telemóvel: ')
@@ -176,29 +162,18 @@ def gestao_alunos():
     white_space = Label(info_person)
     white_space.pack(pady=50)
 
-
-
-
     cursos_text = Label(info_person, text='Cursos Inscritos:', font='Arial 16')
     cursos_text.pack(padx=30, pady=15, anchor='w')
 
-
-
     info_person_courses = Listbox(info_person, font='Arial 14', width=30, borderwidth=0, bg='white')
     info_person_courses.pack(padx=30, pady=15, anchor='w')
-    info_person_courses.bind("<Button-1>", ignore_click)
-
-
-
+    info_person_courses.bind("<Button-1>", logic.ignore_click)
 
     RIGHTFRAME = Frame(main_frame)#--------------------------------rigth frame------------------------------------------
     RIGHTFRAME.pack(side='left', fill='both', anchor='e', expand=True)
 
-
-
     menu_alunos = Frame(RIGHTFRAME, bg='#b3b5b4', width=150, height=50)
     menu_alunos.pack(anchor='ne', expand=True)
-
 
     button1 = Button(menu_alunos, text='Informação Pessoal', **button_styles_mini_menu)
     button1.pack(pady=10, padx=10, fill='x')
@@ -217,14 +192,11 @@ def gestao_alunos():
 
     root.mainloop()
 
-
-
-def update_info_user(): #-----------------------------add course-------------------------
+def update_info_user():#-----------------------------add course-------------------------
     clear_content_frame(main_frame)
     alunos = database.alunos()
 
     def person_info():
-        password_origi = None
         nome_aux = change_person.get()
 
         if nome_aux:
@@ -235,12 +207,11 @@ def update_info_user(): #-----------------------------add course----------------
 
                 if password is not None:
                     if password == password_origi:
-                        nome_selecionado = change_person.get()
 
-                        aluno_nome_aux = database.aluno_nome(nome_selecionado)
-                        aluno_phone_aux = database.aluno_phone(nome_selecionado)
-                        aluno_email_aux = database.aluno_email(nome_selecionado)
-                        aluno_address_aux = database.aluno_address(nome_selecionado)
+                        aluno_nome_aux = database.aluno_nome(nome_aux)
+                        aluno_phone_aux = database.aluno_phone(nome_aux)
+                        aluno_email_aux = database.aluno_email(nome_aux)
+                        aluno_address_aux = database.aluno_address(nome_aux)
 
                         aluno_nome.set(f'Nome: {aluno_nome_aux}')
                         aluno_phone.set(f'Telemóvel: {aluno_phone_aux}')
@@ -254,8 +225,6 @@ def update_info_user(): #-----------------------------add course----------------
             messagebox.showerror('Erro!', 'Selecione um aluno')
 
     def update_info():
-        password_origi = None
-        data_change = 0
 
         nome = name_entry.get()
         email = email_entry.get()
@@ -265,48 +234,11 @@ def update_info_user(): #-----------------------------add course----------------
         nome_aux = aluno_nome.get()
         nome_aux = nome_aux.removeprefix('Nome: ')
 
-        password_origi = database.password_original(nome_aux)
+        email_aux = aluno_email.get()
+        phone_aux = aluno_phone.get()
+        address_aux = aluno_morada.get()
 
-        password = simpledialog.askstring("Senha", "Digite a sua senha:")
-
-        if password is not None:
-            if password == password_origi:
-                if nome:
-                    data_change = 1
-
-                    database.update_nome(nome, nome_aux)
-
-                if email:
-                    data_change = 1
-                    email_aux = aluno_email.get()
-                    email_aux = email_aux.removeprefix('Email: ')
-
-                    database.update_email(email, email_aux)
-
-                if telemovel:
-                    data_change = 1
-                    phone_aux = aluno_phone.get()
-                    phone_aux = phone_aux.removeprefix('Telemóvel: ')
-
-                    database.update_phone(telemovel, phone_aux)
-
-                if morada:
-                    data_change = 1
-                    address_aux = aluno_morada.get()
-                    address_aux = address_aux.removeprefix('Morada: ')
-
-                    database.update_address(morada, address_aux)
-
-            else:
-                messagebox.showerror('Erro!', 'Senha Incorreta')
-
-            if data_change == 1:
-                messagebox.showinfo('Sucesso', 'Os seus dados foram alterados!')
-            elif data_change == 0:
-                messagebox.showerror('Erro!', 'Nenhuma alteração foi inserida, verifique os novos dados')
-
-
-
+        logic.update_info(nome_aux, nome, email, email_aux, telemovel, phone_aux, morada, address_aux)
 
     menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
     menu_frame.pack(side='left', fill='y')
@@ -332,16 +264,11 @@ def update_info_user(): #-----------------------------add course----------------
     old_info_person_frame = Frame(LEFTFRAME)  # --------------------------------left frame(left side) image section----------
     old_info_person_frame.pack(pady=20, side='left', anchor='n')
 
-
-
-
     white_space = Label(old_info_person_frame)
     white_space.pack(pady=5)
 
-
     title_old_info = Label(old_info_person_frame, text='Dados Atuais:', font='Arial 18 bold')
     title_old_info.pack(pady=25)
-
 
     aluno_nome = StringVar()
     aluno_phone = StringVar()
@@ -365,14 +292,11 @@ def update_info_user(): #-----------------------------add course----------------
     info_person_address = Label(old_info_person_frame, textvariable=aluno_morada, font='Arial 16')
     info_person_address.pack(padx=30, pady=25, anchor='w')
 
-
-
     change_person = ttk.Combobox(old_info_person_frame, values=alunos, font='RArial 14', justify='center',state='readonly')
     change_person.pack(pady=15)
 
     select_button = ttk.Button(old_info_person_frame, text='Selecionar aluno acima', width=40, command=person_info)
     select_button.pack(pady=5)
-
 
     new_info_person = Frame(LEFTFRAME)  # --------------------------------left frame(right side) info section------------------
     new_info_person.pack(pady=20, side='left', anchor='n')
@@ -382,7 +306,6 @@ def update_info_user(): #-----------------------------add course----------------
 
     title_new_info = Label(new_info_person, text='Novos dados:', font='Arial 18 bold')
     title_new_info.pack(pady=25)
-
 
     name_entry = ttk.Entry(new_info_person, font='Arial 16')
     name_entry.pack(padx=30, pady=25, anchor='w')
@@ -398,7 +321,6 @@ def update_info_user(): #-----------------------------add course----------------
 
     update_button = Button(new_info_person, text='Atualizar dados', width=20, command=update_info, fg='white', bg='#6686ba', font=FONT, height=1, cursor='hand2')
     update_button.pack(pady=25)
-
 
     RIGHTFRAME = Frame(main_frame)  # --------------------------------rigth frame------------------------------------------
     RIGHTFRAME.pack(side='left', fill='both', anchor='e', expand=True)
@@ -422,8 +344,7 @@ def update_info_user(): #-----------------------------add course----------------
     title_page.place(x=540, y=5)
 
 
-
-def add_course(): #-----------------------------add course-------------------------
+def add_course():#-----------------------------add course-------------------------
     clear_content_frame(main_frame)
     alunos = database.alunos()
     cursos = database.cursos()
@@ -431,14 +352,15 @@ def add_course(): #-----------------------------add course----------------------
     def cursoId():
         global cursoID
         cursoDesc = change_course.get()
-        cursoDesc = cursoDesc.split(' --- ')
-        cursoDesc = cursoDesc[0]
+
+        cursoDesc = logic.curso_desc_get(cursoDesc)
 
         if cursoDesc:
             cursoID = database.course_id(cursoDesc)
 
         else:
             messagebox.showerror('Erro', 'Insira um curso')
+
 
     def alunoId():
         global alunoID
@@ -449,14 +371,16 @@ def add_course(): #-----------------------------add course----------------------
         else:
             messagebox.showerror('Erro', 'Insira um aluno')
 
-
     def insert_course():
         global password_origi
+
         aluno_id = alunoId()
         curso_id = cursoId()
+
         cursoDesc = change_course.get()
-        cursoDesc = cursoDesc.split(' --- ')
-        cursoDesc = cursoDesc[0]
+
+        cursoDesc = logic.curso_desc_get(cursoDesc)
+
         cursoInscrito = 0
 
         found = database.verify_if_in_course(aluno_id, curso_id)
@@ -483,7 +407,6 @@ def add_course(): #-----------------------------add course----------------------
             else:
                 messagebox.showerror('Erro!', 'Senha Incorreta')
 
-
     menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
     menu_frame.pack(side='left', fill='y')
 
@@ -502,17 +425,11 @@ def add_course(): #-----------------------------add course----------------------
     button5 = Button(menu_frame, text='Performance de Alunos', **button_styles)
     button5.pack(pady=10, padx=20, fill='x')
 
-
     center_frame = Frame(main_frame)  # --------------------------------left frame---------------------------------
     center_frame.pack(side='left', fill='both', expand=True)
 
-
-
     white_space = Label(center_frame)
     white_space.pack(pady=45)
-
-
-
 
     person_title = Label(center_frame, text= 'Selecione o Aluno:', font='Arial 17')
     person_title.pack()
@@ -520,14 +437,11 @@ def add_course(): #-----------------------------add course----------------------
     change_person = ttk.Combobox(center_frame, values=alunos, font='Arial 14', justify='center', state='readonly')
     change_person.pack(pady=25)
 
-
     cursos_text = Label(center_frame, text='Selecione o Curso:', font='Arial 17')
     cursos_text.pack()
 
     change_course = ttk.Combobox(center_frame, values=cursos, font='Arial 14', justify='center', state='readonly', width=30)
     change_course.pack(pady=25)
-
-
 
     add_to_course = Button(center_frame, text='Adicionar Aluno ao Curso', fg='white', bg='green', font='Arial 16', cursor='hand2', command=insert_course)
     add_to_course.pack(pady=25)
@@ -562,8 +476,8 @@ def remove_course():
     def cursoId():
         global cursoID
         cursoDesc = change_course.get()
-        cursoDesc = cursoDesc.split(' --- ')
-        cursoDesc = cursoDesc[0]
+
+        cursoDesc = logic.curso_desc_get(cursoDesc)
 
         if cursoDesc:
             cursoID = database.course_id(cursoDesc)
@@ -582,11 +496,14 @@ def remove_course():
 
     def remove_course():
         global password_origi
+
         aluno_id = alunoId()
         curso_id = cursoId()
+
         cursoDesc = change_course.get()
-        cursoDesc = cursoDesc.split(' --- ')
-        cursoDesc = cursoDesc[0]
+
+        cursoDesc = logic.curso_desc_get(cursoDesc)
+
         cursoInscrito = 0
 
         found = database.verify_if_in_course(aluno_id, curso_id)
@@ -612,7 +529,6 @@ def remove_course():
                     messagebox.showerror('Erro', 'O aluno selecionado não está inscrito nesse curso!')
             else:
                 messagebox.showerror('Erro!', 'Senha Incorreta')
-
 
     menu_frame = Frame(main_frame, bg='#383838', width=200, height=720)
     menu_frame.pack(side='left', fill='y')
