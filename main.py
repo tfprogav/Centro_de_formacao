@@ -5,6 +5,7 @@ import database
 import mysql.connector
 from tkinter import messagebox
 from tkinter import simpledialog
+import logic
 
 mydb = mysql.connector.connect(
         host="localhost",
@@ -82,41 +83,22 @@ def gestao_alunos():
 
 
     def person_curso():
-        global id
         info_person_courses.delete(0, last=6) #Reset na lista de cursos (texto)
 
         nome_selecionado = change_person.get()
 
-
-        alunos_dict = database.alunos_id()
-
-        for key, value in alunos_dict.items(): #Confirmar se o nome selecionado é igual ao retirado da base de dados se sim*
-            if value == nome_selecionado:
-                id = key # * Associa o seu id para a variavel id e executa a procura dos cursos por id
-
-        alunos_cursos_lista = database.cursos_por_id(id)
+        alunos_cursos_lista = logic.person_curso(nome_selecionado)
 
         for curso in alunos_cursos_lista: #Vai buscar o curso na lista de cursos e insere na ListBox
             info_person_courses.insert(END, curso)
-        return alunos_cursos_lista
+
 
 
     def delete_aluno():
         nome_aux = aluno_nome.get()
         nome_aux = nome_aux.removeprefix('Nome: ')
 
-        try:
-            if nome_aux:
-                response = messagebox.askyesno('Tem a certeza?', 'Tem a certeza que quer eliminar este aluno?')
-                if response:
-                    database.delete_aluno(nome_aux)
-                    messagebox.showinfo('Sucesso', 'O seu aluno foi eliminado')
-                else:
-                    messagebox.showerror('Erro','Erro na base de dados, por favor tente novamente mais tarde, obrigado')
-            else:
-                messagebox.showerror('Erro', 'Selecione um aluno antes de eliminá-lo')
-        except:
-            messagebox.showerror('Erro', 'Erro na base de dados, por favor tente novamente mais tarde, obrigado')
+        logic.delete_aluno(nome_aux)
 
     def ignore_click(event):
         return "break"

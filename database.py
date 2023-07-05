@@ -195,7 +195,6 @@ def aluno_id(personName):
     return alunoID
 
 
-
 def verify_if_in_course(aluno_id, curso_id):
     mycursor = mydb.cursor()
     mycursor.execute(f"SELECT aluno_id, curso_id FROM q_alunos_cursos WHERE aluno_id = {aluno_id} AND curso_id = {curso_id}")
