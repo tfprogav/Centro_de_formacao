@@ -283,13 +283,7 @@ def update_info_user(): #-----------------------------add course----------------
         nome_aux = aluno_nome.get()
         nome_aux = nome_aux.removeprefix('Nome: ')
 
-        mycursor = mydb.cursor()
-
-        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
-
-        password_in_lista = mycursor.fetchall()
-        for row in password_in_lista:
-            password_origi = row[0]
+        password_origi = database.password_original(nome_aux)
 
         password = simpledialog.askstring("Senha", "Digite a sua senha:")
 
@@ -297,48 +291,30 @@ def update_info_user(): #-----------------------------add course----------------
             if password == password_origi:
                 if nome:
                     data_change = 1
-                    mycursor = mydb.cursor()
 
-                    mycursor.execute(
-                        f"UPDATE q_utilizadores SET utilizador_nome = '{nome}' WHERE utilizador_nome = '{nome_aux}'")
-
-                    mydb.commit()
+                    database.update_nome(nome, nome_aux)
 
                 if email:
                     data_change = 1
                     email_aux = aluno_email.get()
                     email_aux = email_aux.removeprefix('Email: ')
 
-                    mycursor = mydb.cursor()
-
-                    mycursor.execute(
-                        f"UPDATE q_utilizadores SET utilizador_email = '{email}' WHERE utilizador_email = '{email_aux}'")
-
-                    mydb.commit()
+                    database.update_email(email, email_aux)
 
                 if telemovel:
                     data_change = 1
                     phone_aux = aluno_phone.get()
                     phone_aux = phone_aux.removeprefix('Telemóvel: ')
 
-                    mycursor = mydb.cursor()
-
-                    mycursor.execute(
-                        f"UPDATE q_utilizadores SET utilizador_contacto = '{telemovel}' WHERE utilizador_contacto = '{phone_aux}'")
-
-                    mydb.commit()
+                    database.update_phone(telemovel, phone_aux)
 
                 if morada:
                     data_change = 1
                     address_aux = aluno_morada.get()
                     address_aux = address_aux.removeprefix('Morada: ')
 
-                    mycursor = mydb.cursor()
+                    database.update_address(morada, address_aux)
 
-                    mycursor.execute(
-                        f"UPDATE q_utilizadores SET utilizador_morada = '{morada}' WHERE utilizador_morada = '{address_aux}'")
-
-                    mydb.commit()
             else:
                 messagebox.showerror('Erro!', 'Senha Incorreta')
 
@@ -477,14 +453,7 @@ def add_course(): #-----------------------------add course----------------------
         cursoDesc = cursoDesc[0]
 
         if cursoDesc:
-            mycursor = mydb.cursor()
-            mycursor.execute(f"SELECT curso_id FROM q_cursos WHERE curso_desc = '{cursoDesc}'")
-
-            q_curso_id = mycursor.fetchall()
-            for row in q_curso_id:
-                cursoID = row[0]
-
-            return cursoID
+            cursoID = database.course_id(cursoDesc)
 
         else:
             messagebox.showerror('Erro', 'Insira um curso')
@@ -494,13 +463,7 @@ def add_course(): #-----------------------------add course----------------------
         personName = change_person.get()
 
         if personName:
-            mycursor = mydb.cursor()
-            mycursor.execute(f"SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = '{personName}'")
-
-            q_aluno_id = mycursor.fetchall()
-            for row in q_aluno_id:
-                alunoID = row[0]
-            return alunoID
+            alunoID = database.aluno_id(personName)
         else:
             messagebox.showerror('Erro', 'Insira um aluno')
 
@@ -514,32 +477,23 @@ def add_course(): #-----------------------------add course----------------------
         cursoDesc = cursoDesc[0]
         cursoInscrito = 0
 
-        mycursor = mydb.cursor()
-        mycursor.execute(f"SELECT aluno_id, curso_id FROM q_alunos_cursos WHERE aluno_id = {aluno_id} AND curso_id = {curso_id}")
-        found = mycursor.fetchall()
+        found = database.verify_if_in_course(aluno_id, curso_id)
 
         if found:
             cursoInscrito = 1
         else:
             cursoInscrito = 0
 
-        mycursor = mydb.cursor()
-
-        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_id = '{aluno_id}'")
-
-        password_in_lista = mycursor.fetchall()
-        for row in password_in_lista:
-            password_origi = row[0]
+        password_origi = database.password_original(aluno_id)
 
         password = simpledialog.askstring("Senha", "Digite a sua senha:")
 
         if password is not None:
             if password == password_origi:
                 if cursoInscrito == 0:
-                    mycursor = mydb.cursor()
-                    mycursor.execute(
-                        f"INSERT INTO q_alunos_cursos (aluno_id, curso_id) VALUES ({aluno_id}, {curso_id})")
-                    mydb.commit()
+
+                    database.insert_in_course(aluno_id, curso_id)
+
                     messagebox.showinfo('Sucesso', f'O seu aluno foi inserido no curso: {cursoDesc}')
                     messagebox.showinfo('Pagamento', 'Depois não se esqueça de pagar a incrição do curso..')
                 else:
@@ -630,14 +584,7 @@ def remove_course():
         cursoDesc = cursoDesc[0]
 
         if cursoDesc:
-            mycursor = mydb.cursor()
-            mycursor.execute(f"SELECT curso_id FROM q_cursos WHERE curso_desc = '{cursoDesc}'")
-
-            q_curso_id = mycursor.fetchall()
-            for row in q_curso_id:
-                cursoID = row[0]
-
-            return cursoID
+            cursoID = database.course_id(cursoDesc)
 
         else:
             messagebox.showerror('Erro', 'Insira um curso')
@@ -647,13 +594,7 @@ def remove_course():
         personName = change_person.get()
 
         if personName:
-            mycursor = mydb.cursor()
-            mycursor.execute(f"SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = '{personName}'")
-
-            q_aluno_id = mycursor.fetchall()
-            for row in q_aluno_id:
-                alunoID = row[0]
-            return alunoID
+            alunoID = database.aluno_id(personName)
         else:
             messagebox.showerror('Erro', 'Insira um aluno')
 
@@ -666,33 +607,23 @@ def remove_course():
         cursoDesc = cursoDesc[0]
         cursoInscrito = 0
 
-        mycursor = mydb.cursor()
-        mycursor.execute(
-            f"SELECT aluno_id, curso_id FROM q_alunos_cursos WHERE aluno_id = {aluno_id} AND curso_id = {curso_id}")
-        found = mycursor.fetchall()
+        found = database.verify_if_in_course(aluno_id, curso_id)
 
         if found:
             cursoInscrito = 1
         else:
             cursoInscrito = 0
 
-        mycursor = mydb.cursor()
-
-        mycursor.execute(f"SELECT utilizador_senha FROM q_utilizadores WHERE utilizador_id = '{aluno_id}'")
-
-        password_in_lista = mycursor.fetchall()
-        for row in password_in_lista:
-            password_origi = row[0]
+        password_origi = database.password_original(aluno_id)
 
         password = simpledialog.askstring("Senha", "Digite a sua senha:")
 
         if password is not None:
             if password == password_origi:
                 if cursoInscrito == 1:
-                    mycursor = mydb.cursor()
-                    mycursor.execute(
-                        f"DELETE FROM q_alunos_cursos WHERE aluno_id = ({aluno_id} AND curso_id = {curso_id})")
-                    mydb.commit()
+
+                    database.remove_from_course(aluno_id, curso_id)
+
                     messagebox.showinfo('Sucesso', f'O seu aluno foi removido do curso: {cursoDesc}')
 
                 else:

@@ -137,3 +137,80 @@ def delete_aluno(nome_aux):
 
     mycursor.execute(f"DELETE FROM q_utilizadores WHERE utilizador_nome = '{nome_aux}'")
     mydb.commit()
+
+
+def update_nome(nome, nome_aux):
+    mycursor = mydb.cursor()
+
+    mycursor.execute(f"UPDATE q_utilizadores SET utilizador_nome = '{nome}' WHERE utilizador_nome = '{nome_aux}'")
+
+    mydb.commit()
+
+
+def update_email(email, email_aux):
+    mycursor = mydb.cursor()
+
+    mycursor.execute(f"UPDATE q_utilizadores SET utilizador_email = '{email}' WHERE utilizador_email = '{email_aux}'")
+
+    mydb.commit()
+
+
+def update_phone(telemovel, phone_aux):
+    mycursor = mydb.cursor()
+
+    mycursor.execute(f"UPDATE q_utilizadores SET utilizador_contacto = '{telemovel}' WHERE utilizador_contacto = '{phone_aux}'")
+
+    mydb.commit()
+
+
+def update_address(morada, address_aux):
+    mycursor = mydb.cursor()
+
+    mycursor.execute(f"UPDATE q_utilizadores SET utilizador_morada = '{morada}' WHERE utilizador_morada = '{address_aux}'")
+
+    mydb.commit()
+
+
+def course_id(cursoDesc):
+    global cursoID
+    mycursor = mydb.cursor()
+    mycursor.execute(f"SELECT curso_id FROM q_cursos WHERE curso_desc = '{cursoDesc}'")
+
+    q_curso_id = mycursor.fetchall()
+    for row in q_curso_id:
+        cursoID = row[0]
+
+    return cursoID
+
+
+def aluno_id(personName):
+    global alunoID
+    mycursor = mydb.cursor()
+    mycursor.execute(f"SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = '{personName}'")
+
+    q_aluno_id = mycursor.fetchall()
+    for row in q_aluno_id:
+        alunoID = row[0]
+
+    return alunoID
+
+
+
+def verify_if_in_course(aluno_id, curso_id):
+    mycursor = mydb.cursor()
+    mycursor.execute(f"SELECT aluno_id, curso_id FROM q_alunos_cursos WHERE aluno_id = {aluno_id} AND curso_id = {curso_id}")
+    found = mycursor.fetchall()
+
+    return found
+
+
+def insert_in_course(aluno_id, curso_id):
+    mycursor = mydb.cursor()
+    mycursor.execute(f"INSERT INTO q_alunos_cursos (aluno_id, curso_id) VALUES ({aluno_id}, {curso_id})")
+    mydb.commit()
+
+
+def remove_from_course(aluno_id, curso_id):
+    mycursor = mydb.cursor()
+    mycursor.execute(f"DELETE FROM q_alunos_cursos WHERE aluno_id = ({aluno_id} AND curso_id = {curso_id})")
+    mydb.commit()
