@@ -2,17 +2,9 @@ from tkinter import * #Interface
 from tkinter import ttk #Interface
 from PIL import Image, ImageTk #Interface (imagens)
 import database #Ficheiro com as querys sql
-import mysql.connector #Para conectar á base de dados para não haver problemas
 from tkinter import messagebox #Interface
 from tkinter import simpledialog #Interface
 import logic #Ficheiro com a lógica do programa
-
-mydb = mysql.connector.connect( #Conexão á base de dados
-        host="localhost",
-        user="root",
-        password="",
-        database="tf_prog_av"
-    )
 
 root = Tk() #Criação da janela
 root.title('Centro de formação')
@@ -50,7 +42,7 @@ main_frame = Frame(root, width=1280, height=720)
 main_frame.pack(expand=True, fill='both')
 
 def gestao_alunos():
-    clear_content_frame(main_frame) #Eliminar tudo o conteúdo para adicionar os novos
+    logic.clear_content_frame(main_frame) #Eliminar tudo o conteúdo para adicionar os novos
     alunos = database.alunos() #Receber uma lista dos alunos criados
     def person_info():
         nome_aux = change_person.get()
@@ -190,7 +182,7 @@ def gestao_alunos():
     root.mainloop()
 
 def update_info_user():#-----------------------------Página de atualizar dados do aluno---------------------------------
-    clear_content_frame(main_frame)
+    logic.clear_content_frame(main_frame)
     alunos = database.alunos()
 
     def person_info():
@@ -340,7 +332,7 @@ def update_info_user():#-----------------------------Página de atualizar dados 
 
 
 def add_course():#-----------------------------Adicionar aluno a um curso-------------------------
-    clear_content_frame(main_frame)
+    logic.clear_content_frame(main_frame)
     alunos = database.alunos()
     cursos = database.cursos()
 
@@ -441,7 +433,7 @@ def add_course():#-----------------------------Adicionar aluno a um curso-------
 
 
 def remove_course():
-    clear_content_frame(main_frame)
+    logic.clear_content_frame(main_frame)
     alunos = database.alunos()
     cursos = []
 
@@ -547,9 +539,7 @@ def remove_course():
     title_page.place(x=540, y=5)
 
 
-def clear_content_frame(frame):
-    for widget in frame.winfo_children():
-        widget.destroy() #Destruir os elementos criados para quando ir para outra página adicionar e não subrepor os anteriores
+
 
 if __name__ == '__main__':
     gestao_alunos()

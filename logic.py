@@ -137,3 +137,8 @@ def remove_course(aluno_id, curso_id, cursoDesc):
                 messagebox.showerror('Erro', 'O aluno selecionado não está inscrito nesse curso!')
         else:
             messagebox.showerror('Erro!', 'Senha Incorreta')
+
+
+def clear_content_frame(frame):
+    for widget in frame.winfo_children():
+        widget.destroy() #Destruir os elementos criados para quando ir para outra página adicionar e não subrepor os anteriores
