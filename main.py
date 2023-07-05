@@ -154,7 +154,7 @@ def gestao_alunos():
     cursos_text = Label(info_person, text='Cursos Inscritos:', font='Arial 16') #Titulo
     cursos_text.pack(padx=30, pady=15, anchor='w')
 
-    info_person_courses = Listbox(info_person, font='Arial 14', width=30, borderwidth=0, bg='white') #Lista com os cursos do aluno
+    info_person_courses = Listbox(info_person, font='Arial 14', width=30, borderwidth=0) #Lista com os cursos do aluno
     info_person_courses.pack(padx=30, pady=15, anchor='w')
     info_person_courses.bind("<Button-1>", logic.ignore_click) #Ao clicar num elemento da lista não acontece nada(readonly)
 
