@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 06-Jul-2023 às 17:56
+-- Tempo de geração: 06-Jul-2023 às 17:59
 -- Versão do servidor: 8.0.31
 -- versão do PHP: 8.0.26
 
@@ -213,23 +213,17 @@ CREATE TABLE IF NOT EXISTS `q_pagamentos` (
   `pagamento_pagou` tinyint(1) NOT NULL,
   PRIMARY KEY (`pagamento_id`),
   KEY `pagamento_aluno_id` (`pagamento_aluno_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Extraindo dados da tabela `q_pagamentos`
 --
 
 INSERT INTO `q_pagamentos` (`pagamento_id`, `pagamento_data`, `pagamento_aluno_id`, `pagamento_curso_id`, `pagamento_valor`, `pagamento_metodo`, `pagamento_pagou`) VALUES
-(1, '2023-06-24', 1, 0, '100', '', 0),
-(2, '2023-06-24', 2, 0, '100', 'Credit Card', 1),
-(3, '2023-06-24', 3, 0, '80', 'PayPal', 1),
-(4, '2023-06-24', 4, 0, '80', '', 0),
-(5, '2023-06-23', 5, 0, '90', 'Bank Transfer', 1),
-(6, '2023-06-23', 6, 0, '90', '', 0),
-(7, '2023-06-24', 7, 0, '75', '', 0),
-(8, '2023-06-24', 8, 0, '75', 'Cash', 1),
-(9, '2023-06-23', 9, 0, '70', '', 0),
-(10, '2023-06-23', 10, 0, '70', 'Credit Card', 1);
+(11, '2023-07-06', 1, 1, '350', NULL, 0),
+(12, '2023-07-06', 3, 2, '250', NULL, 0),
+(13, '2023-07-07', 20, 3, '700', NULL, 0),
+(14, '2023-07-05', 25, 4, '500', NULL, 0);
 
 -- --------------------------------------------------------
 
