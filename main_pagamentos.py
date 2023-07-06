@@ -490,7 +490,7 @@ def show_gestao_pagamentos(content_frame):
             messagebox.showinfo("Aviso", "A fatura nao foi paga, verifique se selecionou corretamente todos os campos")
 
 
-    def gerar_pdf(content_frame):
+    def gerar_pdf():
         pagamento_id = row_pagamento_id()
 
         # junçao das tabelas q_pagamentos e q_utilizadores para ir buscar o valor e o nome do aluno a que se esta a pagar a fatura
@@ -521,7 +521,7 @@ def show_gestao_pagamentos(content_frame):
         pdf.cell(0, 10, f"Nome do aluno: {nome_aluno}", ln=1)
         pdf.cell(0, 10, f"Nome curso: {curso_nome}", ln=1)
         pdf.cell(0, 10, f"Data: {data_formato}", ln=1)
-        pdf.cell(0, 10, f"Valor: {valor}€", ln=1)
+        pdf.cell(0, 10, f"Valor: {valor} euros", ln=1)
         pdf.cell(0, 10, f"Método de Pagamento: {metodo_pagamento}", ln=1)
 
         nome_arquivo = "detalhes_pagamento_" + str(pagamento_id) + ".pdf"
