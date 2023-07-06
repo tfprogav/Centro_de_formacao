@@ -86,8 +86,8 @@ def gestao_performance(content_frame):
             f"Curso: {curso_nome}\n"
             f"Média do Aluno no Curso: {media_aluno_curso}\n"
             f"Média do Curso: {media_curso}\n"
-            f"Nota Máxima: {nota_maxima}\n"
-            f"Nota Mínima: {nota_minima}"
+            f"Nota Máxima do Curso: {nota_maxima}\n"
+            f"Nota Mínima do Curso: {nota_minima}"
         )
 
     frame_ver_performance = Frame(content_frame)
