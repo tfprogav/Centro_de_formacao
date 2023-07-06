@@ -1,7 +1,6 @@
 from tkinter import *
-from tkinter import ttk
 
-import main_users_def
+import g_utilizadores
 import main_alunos
 import janela_avaliacao
 import janela_performance
@@ -55,7 +54,7 @@ button_styles = {
 
 # O primeiro botão (button1) em particular Define a função main_users_def.criar_interface(content_frame)
 # como o comando a ser executado quando o botão é clicado.
-button1 = Button(menu_frame, text='Gestão de Utilizadores', **button_styles, command=lambda: main_users_def.criar_interface(content_frame))
+button1 = Button(menu_frame, text='Gestão de Utilizadores', **button_styles, command=lambda: g_utilizadores.criar_interface(content_frame))
 button1.pack(pady=10, padx=20, fill='x')
 
 button2 = Button(menu_frame, text='Gestão de Alunos', **button_styles, command=lambda: main_alunos.gestao_alunos(content_frame))
@@ -76,10 +75,10 @@ button6.pack(pady=10, padx=20, fill='x')
 button7 = Button(menu_frame, text='Performance de Alunos', **button_styles, command=lambda: janela_performance.gestao_performance(content_frame))
 button7.pack(pady=10, padx=20, fill='x')
 
-white_space = Label(content_frame)
+white_space = Label(content_frame, bg='white')
 white_space.pack(pady=100)
 
-titulo = Label(content_frame, text='BEM VINDO \n AO \n CENTRO DE FORMAÇÃO', font='Arial 18')
+titulo = Label(content_frame, text='BEM VINDO \n AO \n CENTRO DE FORMAÇÃO', font='Arial 18', bg='white')
 titulo.pack(anchor='center')
 
 # Inicia a loop do programa e exibe a janela
