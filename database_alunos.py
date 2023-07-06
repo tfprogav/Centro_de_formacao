@@ -219,5 +219,5 @@ def insert_in_course(aluno_id, curso_id): #Insere aluno no respetivo curso
 
 def remove_from_course(aluno_id, curso_id): #Remove o aluno do respetivo curso
     mycursor = mydb.cursor()
-    mycursor.execute(f"DELETE FROM q_alunos_cursos WHERE aluno_id = ({aluno_id} AND curso_id = {curso_id})")
+    mycursor.execute(f"DELETE FROM q_alunos_cursos WHERE aluno_id = {aluno_id} AND curso_id = {curso_id}")
     mydb.commit()
