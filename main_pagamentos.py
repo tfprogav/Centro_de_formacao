@@ -519,7 +519,7 @@ def show_gestao_pagamentos(content_frame):
 
         pdf.add_page()  # Adiciona uma página ao PDF
 
-        pdf.image("imagens/template_ipt.png", w=200, h=30)  # Adicionar a imagem do cabeçalho
+        pdf.image("template_ipt.png", w=200, h=30)  # Adicionar a imagem do cabeçalho
 
         pdf.set_font("Arial", size=12)  # Define a fonte e o tamanho do texto
 
