@@ -148,7 +148,6 @@ def gestao_avaliacoes(content_frame):
         combo_professores.delete(0, END)
 
     def adicionar_avaliacao():
-
         # Verifica se todos os campos estão preenchidos
         if combo_alunos.get() and combo_curso.get() and entry_nota.get() and cal.get() and combo_professores.get():
             aluno = combo_alunos.get()
@@ -157,29 +156,33 @@ def gestao_avaliacoes(content_frame):
             data = cal.get()
             professor = combo_professores.get()
 
-            # Verifica se a nota é um número válido
-            if nota.isnumeric() or (nota.count('.') == 1 and nota.replace('.', '').isnumeric()):
-                nota = float(nota)
-                if 0 <= nota <= 20:
-                    cursor = mydb.cursor()
-                    query = """
-                           INSERT INTO q_avaliacoes (avaliacao_aluno_id, avaliacao_prof_id, avaliacao_curso, avaliacao_data, avaliacao_nota)
-                           SELECT 
-                               (SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = %s),
-                               (SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = %s),
-                               (SELECT curso_id FROM q_cursos WHERE curso_desc = %s),
-                               %s, %s
-               """
-                    values = (aluno, professor, curso, data, nota)
-                    cursor.execute(query, values)
-                    mydb.commit()
-
-                    carregar_avaliacoes()
-                    limpar_campos()
-                else:
-                    messagebox.showinfo("Erro", "A nota deve ser um número de 0 a 20.")
+            # Verifica se a opção selecionada em combo_curso é "Todos"
+            if curso == "Todos":
+                messagebox.showinfo("Erro", "Não se esqueça de selecionar um curso.")
             else:
-                messagebox.showinfo("Erro", "A nota deve ser um valor numérico.")
+                # Verifica se a nota é um número válido
+                if nota.isnumeric() or (nota.count('.') == 1 and nota.replace('.', '').isnumeric()):
+                    nota = float(nota)
+                    if 0 <= nota <= 20:
+                        cursor = mydb.cursor()
+                        query = """
+                            INSERT INTO q_avaliacoes (avaliacao_aluno_id, avaliacao_prof_id, avaliacao_curso, avaliacao_data, avaliacao_nota)
+                            SELECT 
+                                (SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = %s),
+                                (SELECT utilizador_id FROM q_utilizadores WHERE utilizador_nome = %s),
+                                (SELECT curso_id FROM q_cursos WHERE curso_desc = %s),
+                                %s, %s
+                        """
+                        values = (aluno, professor, curso, data, nota)
+                        cursor.execute(query, values)
+                        mydb.commit()
+
+                        carregar_avaliacoes()
+                        limpar_campos()
+                    else:
+                        messagebox.showinfo("Erro", "A nota deve ser um número de 0 a 20.")
+                else:
+                    messagebox.showinfo("Erro", "A nota deve ser um valor numérico.")
         else:
             messagebox.showinfo("Erro", "Preencha todos os campos para inserir uma avaliação.")
 
@@ -296,13 +299,13 @@ def gestao_avaliacoes(content_frame):
         combo_professores['values'] = professores
 
     # Criação do frame para a gestão de avaliações
-    frame_gestao_avaliacoes = Frame(content_frame)
+    frame_gestao_avaliacoes = Frame(content_frame, bg='white')
     frame_gestao_avaliacoes.pack()
 
-    label = Label(frame_gestao_avaliacoes, text='Gestão de Avaliações', font=('Arial', 14))
+    label = Label(frame_gestao_avaliacoes, text='Gestão de Avaliações', font=('Arial', 14), bg='white')
     label.pack(pady=5)
 
-    label_nota = Label(content_frame, text="")
+    label_nota = Label(content_frame, text="", bg='white')
     label_nota.pack(pady=1)
 
     # Criação da árvore (treeview) para exibir as avaliações
@@ -318,7 +321,6 @@ def gestao_avaliacoes(content_frame):
     tree.heading("Professor", text="Professor")
     tree.column("Professor", width=150)
 
-    # Preenche a combo_curso com os cursos
     cursor = mydb.cursor()
     cursor.execute("SELECT curso_desc FROM q_cursos")
     cursos = [curso[0] for curso in cursor.fetchall()]
@@ -334,9 +336,9 @@ def gestao_avaliacoes(content_frame):
 
     carregar_avaliacoes()
 
-    label_nota = Label(content_frame, text="")
+    label_nota = Label(content_frame, text="", bg='white')
     label_nota.pack(pady=1)
-    label_nota = Label(content_frame, text="")
+    label_nota = Label(content_frame, text="", bg='white')
     label_nota.pack(pady=1)
 
     combo_curso = ttk.Combobox(content_frame, values=cursos, textvariable=selected_course)
@@ -372,7 +374,7 @@ def gestao_avaliacoes(content_frame):
     preencher_combobox_professores()
     combo_professores.bind("<KeyRelease>", pesquisar_professores)
 
-    frame_botoes = Frame(content_frame)
+    frame_botoes = Frame(content_frame, bg='white')
     frame_botoes.pack(pady=5)
     frame_gestao_avaliacoes = Frame(content_frame)
     frame_gestao_avaliacoes.pack(anchor='center')
