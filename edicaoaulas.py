@@ -182,7 +182,7 @@ def janela_consultar_aulas(curso_id):
             #Popula a Combobox professor_combo com o conteúdo de values[1]
             professor_combo.set(values[1])
 
-            #Carrega para as variáveis correspondentes os valores de values
+            #Carrega para as variáveis correspondentes os valores de valuess
             aula_inicio = values[2]
             aula_termino = values[3]
 

@@ -1,4 +1,4 @@
-#Importa as biblotecas ou funções necessárioas
+#Importa as biblotecas ou funções necessárias
 from tkinter import Label, ttk, Frame, Entry, Button, messagebox, Scrollbar
 
 #É aberta a ligação à base de dados
@@ -8,7 +8,6 @@ host="127.0.0.1",
 user="root",
 password="",
 database="tf_prog_av")
-
 
 #É criada a função gestao_cursos que irá ser executada no frame content_frame
 def gestao_cursos(content_frame):
@@ -43,7 +42,7 @@ def gestao_cursos(content_frame):
     tabela.heading("Descricao", text="Descrição do Curso")
     tabela.heading("Horas", text="Horas")
     tabela.heading("Preco", text="Preço")
-    tabela.pack(pady=20)
+    tabela.pack(pady=10)
 
     #É criada uma scrollbar que irá ficar associada à Treeview tabela
     scrollbar = Scrollbar(frametreeview, orient="vertical", command=tabela.yview)

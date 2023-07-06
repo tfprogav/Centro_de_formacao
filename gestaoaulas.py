@@ -1,9 +1,11 @@
+#Importa as biblotecas ou funções necessárias
 from tkinter import Label, ttk, Frame, Entry, Button, Text, Spinbox, messagebox, Scrollbar, Tk, Listbox, MULTIPLE, END
 from tkinter.ttk import Combobox
 from tkcalendar import DateEntry
 from datetime import datetime
 from edicaoaulas import janela_consultar_aulas
-#
+
+#É aberta a ligação à base de dados
 import mysql.connector
 mydb = mysql.connector.connect(
 host="127.0.0.1",
@@ -12,6 +14,7 @@ password="",
 database="tf_prog_av"
 )
 
+#São definidas funções
 aluno_ids_string = ""
 curso_id = ""
 
@@ -29,7 +32,7 @@ def gestao_aulas(content_frame):
     frame_gestao_a.pack()
 
     label = Label(frame_gestao_a, text="Gestão de Aulas", font=('Arial', 14, "bold"))
-    label.pack()
+    label.pack(pady= 5)
 
     # É criado um objeto cursor que irá ser utilizado para aceder à BD
     mycursor = mydb.cursor()
@@ -103,8 +106,6 @@ def gestao_aulas(content_frame):
 
         #É passado o valor de curso_id à função janela_consultar_aulas
         janela_consultar_aulas(curso_id)
-
-
 
     #É criado o botão que chama a função consultar_editar_aulas
     consultar_editar_button = Button(frame_gestao_a, text="Consultar / Editar Aulas", command=consultar_editar_aulas, font=('Arial',9, 'bold'))
@@ -249,7 +250,6 @@ def gestao_aulas(content_frame):
             if horario_fim <= horario_inicio:
                 messagebox.showerror("Error", "End time must be later than start time")
                 return
-
 
             #Criação de um try para tentar registar os dados na BD
             try:
