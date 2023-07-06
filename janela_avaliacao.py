@@ -296,13 +296,13 @@ def gestao_avaliacoes(content_frame):
         combo_professores['values'] = professores
 
     # Criação do frame para a gestão de avaliações
-    frame_gestao_avaliacoes = Frame(content_frame, bg='white')
+    frame_gestao_avaliacoes = Frame(content_frame)
     frame_gestao_avaliacoes.pack()
 
-    label = Label(frame_gestao_avaliacoes, text='Gestão de Avaliações', font=('Arial', 14), bg='white')
+    label = Label(frame_gestao_avaliacoes, text='Gestão de Avaliações', font=('Arial', 14))
     label.pack(pady=5)
 
-    label_nota = Label(content_frame, text="", bg='white')
+    label_nota = Label(content_frame, text="")
     label_nota.pack(pady=1)
 
     # Criação da árvore (treeview) para exibir as avaliações
@@ -334,9 +334,9 @@ def gestao_avaliacoes(content_frame):
 
     carregar_avaliacoes()
 
-    label_nota = Label(content_frame, text="", bg='white')
+    label_nota = Label(content_frame, text="")
     label_nota.pack(pady=1)
-    label_nota = Label(content_frame, text="", bg='white')
+    label_nota = Label(content_frame, text="")
     label_nota.pack(pady=1)
 
     combo_curso = ttk.Combobox(content_frame, values=cursos, textvariable=selected_course)
@@ -372,7 +372,7 @@ def gestao_avaliacoes(content_frame):
     preencher_combobox_professores()
     combo_professores.bind("<KeyRelease>", pesquisar_professores)
 
-    frame_botoes = Frame(content_frame, bg='white')
+    frame_botoes = Frame(content_frame)
     frame_botoes.pack(pady=5)
     frame_gestao_avaliacoes = Frame(content_frame)
     frame_gestao_avaliacoes.pack(anchor='center')
