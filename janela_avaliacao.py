@@ -19,6 +19,7 @@ def gestao_avaliacoes(content_frame):
     for widget in content_frame.winfo_children():
         widget.destroy()
 
+
     def carregar_avaliacoes():
         # Limpa as avaliações existentes na treeview
         tree.delete(*tree.get_children())
@@ -79,6 +80,7 @@ def gestao_avaliacoes(content_frame):
             avaliacao_list = list(avaliacao)
             avaliacao_list[4] = "Professor " + avaliacao_list[4]  # Adiciona o prefixo "Professor "
             tree.insert("", "end", values=avaliacao_list)
+
 
     def selecionar_avaliacao(event):
         # Obtem o item selecionado na treeview

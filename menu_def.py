@@ -5,6 +5,9 @@ import main_users_def
 import main_alunos
 import janela_avaliacao
 import janela_performance
+import main_pagamentos
+import gestaoaulas
+import gestaocursos
 
 # Definição de funções que limpam o content_frame (chamando a função clear_content_frame())
 # e criam um rótulo com os nomes respetivos. O rótulo é adicionado ao content_frame
@@ -58,17 +61,20 @@ button1.pack(pady=10, padx=20, fill='x')
 button2 = Button(menu_frame, text='Gestão de Alunos', **button_styles, command=lambda: main_alunos.gestao_alunos(content_frame))
 button2.pack(pady=10, padx=20, fill='x')
 
-button3 = Button(menu_frame, text='Gestão de Aulas e Horários', **button_styles)
+button3 = Button(menu_frame, text='Gestão de Cursos', **button_styles, command=lambda: gestaocursos.gestao_cursos(content_frame))
 button3.pack(pady=10, padx=20, fill='x')
 
-button4 = Button(menu_frame, text='Gestão de Pagamentos', **button_styles)
+button4 = Button(menu_frame, text='Gestão de Aulas e Horários', **button_styles, command=lambda: gestaoaulas.gestao_aulas(content_frame))
 button4.pack(pady=10, padx=20, fill='x')
 
-button5 = Button(menu_frame, text='Avaliações de Alunos', **button_styles, command=lambda: janela_avaliacao.gestao_avaliacoes(content_frame))
+button5 = Button(menu_frame, text='Gestão de Pagamentos', **button_styles, command=lambda: main_pagamentos.show_gestao_pagamentos(content_frame))
 button5.pack(pady=10, padx=20, fill='x')
 
-button6 = Button(menu_frame, text='Performance de Alunos', **button_styles, command=lambda: janela_performance.gestao_performance(content_frame))
+button6 = Button(menu_frame, text='Avaliações de Alunos', **button_styles, command=lambda: janela_avaliacao.gestao_avaliacoes(content_frame))
 button6.pack(pady=10, padx=20, fill='x')
+
+button7 = Button(menu_frame, text='Performance de Alunos', **button_styles, command=lambda: janela_performance.gestao_performance(content_frame))
+button7.pack(pady=10, padx=20, fill='x')
 
 white_space = Label(content_frame)
 white_space.pack(pady=100)
