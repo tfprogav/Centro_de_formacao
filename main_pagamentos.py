@@ -20,7 +20,7 @@ def executar_query(query):
     return resultados
 
 
-
+#funçao principal
 def show_gestao_pagamentos(content_frame):
 
     clear_content_frame(content_frame) # limpa a frama para aparecer a nova pagina
@@ -31,6 +31,7 @@ def show_gestao_pagamentos(content_frame):
         cursos = [resultado[0] for resultado in resultados]  # Obtém o valor concatenado do curso
         return cursos
 
+    #funçao para correr no menu secundario
     def abrir_gestao_pagamentos(content_frame):
         clear_content_frame(content_frame)
         show_gestao_pagamentos(content_frame)
@@ -165,6 +166,11 @@ def show_gestao_pagamentos(content_frame):
                                 return valor
 
 
+                            ######################################
+                            ####--- FRAME ATUALIZAR FATURA ---####
+                            ######################################
+
+
                             update_frame = Frame(content_frame) #frame update
                             update_frame.place(x=550, y=200)
 
@@ -220,7 +226,7 @@ def show_gestao_pagamentos(content_frame):
                                 messagebox.showinfo("Sucesso", "Alterações salvas com sucesso!")
 
                             # Botão para guardar as alterações
-                            button_guardar = ttk.Button(update_frame, text="Salvar Alterações", style='RoundedButton.TButton',command=guardar_alteracoes)
+                            button_guardar = ttk.Button(update_frame, text="Guardar Alterações", style='RoundedButton.TButton',command=guardar_alteracoes)
                             button_guardar.grid(row=4, column=1)
 
                         else:
@@ -527,7 +533,7 @@ def show_gestao_pagamentos(content_frame):
         nome_arquivo = "detalhes_pagamento_" + str(pagamento_id) + ".pdf"
         caminho_arquivo = "pdfs_recibos/" + nome_arquivo  # Define o caminho completo do arquivo
         try:
-            pdf.output(caminho_arquivo)  # Tenta salvar o PDF em um arquivo
+            pdf.output(caminho_arquivo)  # Tenta guardar o PDF em um arquivo
             messagebox.showinfo("Sucesso", "O pdf foi criado com sucesso na pasta pdfs_recibos")
         except IndexError:
             messagebox.showinfo("Aviso", "O pdf tem que ser gerado antes da fatura ser paga!")
@@ -664,4 +670,3 @@ def show_gestao_pagamentos(content_frame):
 def clear_content_frame(content_frame):
     for widget in content_frame.winfo_children():
         widget.destroy()
-
