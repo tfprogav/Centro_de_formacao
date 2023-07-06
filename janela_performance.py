@@ -90,13 +90,13 @@ def gestao_performance(content_frame):
             f"Nota Mínima: {nota_minima}"
         )
 
-    frame_ver_performance = Frame(content_frame, bg='white')
+    frame_ver_performance = Frame(content_frame)
     frame_ver_performance.pack()
 
-    label = Label(frame_ver_performance, text='Visualização de Performance', font=('Arial', 14), bg='white')
+    label = Label(frame_ver_performance, text='Visualização de Performance', font=('Arial', 14))
     label.pack(pady=5)
 
-    label_nota = Label(content_frame, text="", bg='white')
+    label_nota = Label(content_frame, text="")
     label_nota.pack(pady=1)
 
     tree = ttk.Treeview(content_frame, columns=("ID", "Nome", "Curso"), show="headings")
